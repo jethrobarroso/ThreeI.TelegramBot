@@ -10,6 +10,7 @@ namespace ThreeI.TelegramBot.Core
         string MessageUnit { get; }
         string MessageOption { get; }
         string MessageDescription { get; }
+        string MessageConfirm { get; }
         string MessageFinal { get; }
     }
 }

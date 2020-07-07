@@ -9,22 +9,37 @@ namespace ThreeI.TelegramBot.Core
 {
     public class TelegramBotManager : IBotManager
     {
-        private readonly string _apiToken;
-        private readonly TelegramBotClient Bot;
-
         public TelegramBotManager(string apiToken)
         {
-            _apiToken = apiToken;
+            ApiToken = apiToken;
             Bot = new TelegramBotClient(apiToken);
 
             InitialiseBotHandlers();
         }
 
+        #region Properties
+        public string ApiToken { get; }
+
+        public TelegramBotClient Bot { get; }
+
+        public bool IsReceiving { get; private set; }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Initialize various event handlers for the bot
+        /// </summary>
         private void InitialiseBotHandlers()
         {
             Bot.OnMessage += Bot_OnMessage;
         }
 
+
+        /// <summary>
+        /// Registers handlers for the bot to handel regular incoming messages
+        /// </summary>
+        /// <param name="sender">Message sender</param>
+        /// <param name="e">Event arguments containing message details</param>
         private void Bot_OnMessage(object sender, MessageEventArgs e)
         {
             if (e.Message.Type == MessageType.Text)
@@ -32,11 +47,19 @@ namespace ThreeI.TelegramBot.Core
                 Bot.SendTextMessageAsync(e.Message.Chat.Id, $"Your message: {e.Message.Text}");
                 Log.Information("Echoed a message");
             }
-
         }
 
-        public void StartReceiving() => Bot.StartReceiving();
+        public void StartReceiving()
+        {
+            Bot.StartReceiving();
+            IsReceiving = true;
+        }
 
-        public void StopReceiving() => Bot.StopReceiving();
+        public void StopReceiving()
+        {
+            Bot.StopReceiving();
+            IsReceiving = false;
+        }
+        #endregion
     }
 }

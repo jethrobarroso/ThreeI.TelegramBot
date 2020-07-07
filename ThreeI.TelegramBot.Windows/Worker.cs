@@ -26,12 +26,27 @@ namespace ThreeI.TelegramBot.Windows
             Debug.WriteLine(_config["telegramToken"]);
         }
 
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            Log.Information("Service started");
+            return base.StartAsync(cancellationToken);
+        }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            Log.Information("Commense shutdown. Stopping ThreeITelegramBot service...");
+            _bot.StopReceiving();
+            Log.Information("All services have been terminated. Shutting down main service...");
+            return base.StopAsync(cancellationToken);
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             try
             {
-                Log.Information("Starting Telegram bot...");
+                Log.Information("Starting bot polling...");
                 _bot.StartReceiving();
+                Log.Information("Polling started. Messages being received");
 
                 while (!stoppingToken.IsCancellationRequested)
                 {

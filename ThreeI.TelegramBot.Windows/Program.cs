@@ -15,7 +15,7 @@ namespace ThreeI.TelegramBot.Windows
     {
         public static void Main(string[] args)
         {
-            var logFileLocation = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\ThreeITelegramBot\BotLogfile.txt";
+            var logFileLocation = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\ThreeITelegramBot\BotLogfile.txt";
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -49,12 +49,22 @@ namespace ThreeI.TelegramBot.Windows
                 .UseWindowsService()
                 .ConfigureServices((hostContext, services) =>
                 {
-                    IConfiguration config = hostContext.Configuration;
+                    Configuration = hostContext.Configuration;
                     services.AddHostedService<Worker>();
-                    services.AddSingleton<IBotManager, TelegramBotManager>(
-                        param => new TelegramBotManager(config["TelegramToken"]));
+                    try
+                    {
+                        services.AddScoped<IMessageProvidor, BotMessageDialog>();
+                        services.AddSingleton<IBotManager, TelegramBotManager>(
+                        param => new TelegramBotManager(Configuration["TelegramToken"]));
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Log.Fatal(ex, "Invalid Telegram bot token");
+                    }
                 })
                 .UseSerilog();
         }
+
+        public static IConfiguration Configuration { get; private set; }
     }
 }
