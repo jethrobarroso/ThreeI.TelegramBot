@@ -52,7 +52,7 @@ namespace ThreeI.TelegramBot.Windows
         {
             if (e.Message.Type == MessageType.Text)
             {
-                Bot.SendTextMessageAsync(e.Message.Chat.Id, $"Your message: {e.Message.Text}", replyMarkup: CreateKeyboardMarkup());
+                Bot.SendTextMessageAsync(e.Message.Chat.Id, $"Your message: {e.Message.Text}");
             }
         }
         #endregion

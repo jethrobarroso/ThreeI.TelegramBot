@@ -57,11 +57,13 @@ namespace ThreeI.TelegramBot.Windows
                     try
                     {
                         services.AddScoped<IMessageProvidor, BotMessageDialog>();
-                        services.AddSingleton<IBotManager, TelegramBotManager>(
-                        param => new TelegramBotManager(Configuration["TelegramToken"]));
                         services.AddScoped<IDataRepository, InMemoryData>();
                         services.AddScoped<IDataService, DataService>();
                         services.AddScoped<DialogNavigatorFactory>();
+                        services.AddSingleton<IBotManager, TelegramBotManager>(
+                        param => new TelegramBotManager(Configuration["TelegramToken"]));
+                        
+                        
                     }
                     catch (ArgumentException ex)
                     {
