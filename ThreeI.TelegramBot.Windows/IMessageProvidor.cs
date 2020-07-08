@@ -6,11 +6,12 @@ namespace ThreeI.TelegramBot.Windows
 {
     public interface IMessageProvidor
     {
-        string MessageBlock { get; }
-        string MessageUnit { get; }
-        string MessageOption { get; }
-        string MessageDescription { get; }
-        string MessageConfirm { get; }
-        string MessageFinal { get; }
+        string Block { get; }
+        string Unit { get; }
+        string Option { get; }
+        string Description { get; }
+        string Confirm { get; }
+        string Final { get; }
+        string BadInput { get; }
     }
 }

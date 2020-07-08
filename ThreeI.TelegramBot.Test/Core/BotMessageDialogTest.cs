@@ -23,12 +23,12 @@ namespace ThreeI.TelegramBot.Test.Core
         {
             IMessageProvidor messenger = new BotMessageDialog(_config);
 
-            Assert.That(messenger.MessageBlock, Is.EqualTo("MessageBlock dialog"));
-            Assert.That(messenger.MessageUnit, Is.EqualTo("MessageUnit dialog"));
-            Assert.That(messenger.MessageOption, Is.EqualTo("MessageOptions dialog"));
-            Assert.That(messenger.MessageDescription, Is.EqualTo("MessageDescription dialog"));
-            Assert.That(messenger.MessageFinal, Is.EqualTo("MessageFinal dialog"));
-            Assert.That(messenger.MessageConfirm, Is.EqualTo("MessageConfirm dialog"));
+            Assert.That(messenger.Block, Is.EqualTo("MessageBlock dialog"));
+            Assert.That(messenger.Unit, Is.EqualTo("MessageUnit dialog"));
+            Assert.That(messenger.Option, Is.EqualTo("MessageOptions dialog"));
+            Assert.That(messenger.Description, Is.EqualTo("MessageDescription dialog"));
+            Assert.That(messenger.Final, Is.EqualTo("MessageFinal dialog"));
+            Assert.That(messenger.Confirm, Is.EqualTo("MessageConfirm dialog"));
         }
     }
 }

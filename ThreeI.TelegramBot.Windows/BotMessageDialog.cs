@@ -15,16 +15,20 @@ namespace ThreeI.TelegramBot.Windows
             _config = config;
         }
 
-        public string MessageBlock => _config["BotMessages:MessageBlock"];
+        public string Block => _config["BotMessages:Block"];
 
-        public string MessageUnit => _config["BotMessages:MessageUnit"];
+        public string Unit => _config["BotMessages:Unit"];
 
-        public string MessageOption => _config["BotMessages:MessageOption"];
+        public string Option => _config["BotMessages:Option"];
 
-        public string MessageDescription => _config["BotMessages:MessageDescription"];
+        public string Description => _config["BotMessages:Description"];
 
-        public string MessageConfirm => _config["BotMessages:MessageConfirm"];
+        public string Confirm => _config["BotMessages:Confirm"];
 
-        public string MessageFinal => _config["BotMessages:MessageFinal"];
+        public string Final => _config["BotMessages:Final"];
+
+        public string MessageBadInput => _config["BotMessages:BadInput"];
+
+        public string BadInput => _config["BotMessages:BadInput"];
     }
 }
