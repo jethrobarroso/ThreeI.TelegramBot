@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace ThreeI.TelegramBot.Core.Models
+namespace ThreeI.TelegramBot.Core
 {
     public class Beneficiary
     {
@@ -13,6 +13,6 @@ namespace ThreeI.TelegramBot.Core.Models
         public string LastName { get; set; }
         public string CellNumber { get; set; }
         public ConversationState Conversation { get; set; }
-        
+
     }
 }

@@ -14,9 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ThreeI.TelegramBot.Core\ThreeI.TelegramBot.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\ThreeI.TelegramBot.Data\ThreeI.TelegramBot.Data.csproj" />
   </ItemGroup>
 </Project>

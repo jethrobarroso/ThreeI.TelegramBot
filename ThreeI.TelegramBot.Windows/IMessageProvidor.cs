@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ThreeI.TelegramBot.Core
+namespace ThreeI.TelegramBot.Windows
 {
     public interface IMessageProvidor
     {

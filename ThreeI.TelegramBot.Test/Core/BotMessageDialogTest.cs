@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using ThreeI.TelegramBot.Core;
 using Microsoft.Extensions.Configuration;
+using ThreeI.TelegramBot.Windows;
 
 namespace ThreeI.TelegramBot.Test.Core
 {

@@ -23,7 +23,6 @@ namespace ThreeI.TelegramBot.Windows
             _logger = logger;
             _config = config;
             _bot = bot;
-            Debug.WriteLine(_config["telegramToken"]);
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -44,14 +43,14 @@ namespace ThreeI.TelegramBot.Windows
         {
             try
             {
-                Log.Information("Starting bot polling...");
+                Log.Information("Starting bot poller...");
                 _bot.StartReceiving();
                 Log.Information("Polling started. Messages being received");
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                    await Task.Delay(5000, stoppingToken);
+                    await Task.Delay(10000, stoppingToken);
                 }
             }    
             catch (Exception ex)

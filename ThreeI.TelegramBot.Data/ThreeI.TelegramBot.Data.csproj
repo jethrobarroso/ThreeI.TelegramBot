@@ -9,4 +9,8 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ThreeI.TelegramBot.Core\ThreeI.TelegramBot.Core.csproj" />
+  </ItemGroup>
+
 </Project>
