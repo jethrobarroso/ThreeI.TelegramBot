@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ThreeI.TelegramBot.Test
 {
-    public static class ConfigHelper
+    public static class TestConfigHelper
     {
         public static IConfiguration InitConfiguration()
         {

@@ -6,6 +6,7 @@ using System.Text;
 using Telegram.Bot.Types;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
+using ThreeI.TelegramBot.Windows.Utilities;
 
 namespace ThreeI.TelegramBot.Windows.Chats
 {
@@ -24,12 +25,15 @@ namespace ThreeI.TelegramBot.Windows.Chats
             var result = string.Empty;
             var timeDiff = DateTime.Now.Subtract(dialogState.LastActive);
 
+            if (_message == "/reset" || _message == "/start")
+            {
+                dialogState.Reset();
+                return _messageProvidor.InitialMessage;
+            }
+
             if (!dialogState.IsSupportMode && _message != "/support")
                 return _messageProvidor.SupportModeNotActive;
-
-            if (_message == "/reset")
-                dialogState.Reset();
-
+              
             if (timeDiff.TotalMinutes > double.Parse(_config["UserSessionExpireTime"]))
             {
                 dialogState.LastActive = DateTime.Now;
@@ -41,17 +45,24 @@ namespace ThreeI.TelegramBot.Windows.Chats
             if (!dialogState.IsSupportMode && _message == "/support")
             {
                 dialogState.IsSupportMode = true;
-                return _messageProvidor.Block;
+                return _messageProvidor.Block + ConfigHelper.GetBlocksInCsvFormat(_config, "BlockNumbers");
             }
-                
 
             switch (dialogState.ChatPhase)
             {
                 // Block phase
                 case 1:
-                    dialogState.Block = _message;
-                    dialogState.ChatPhase = 2;
-                    result += _messageProvidor.Unit;
+                    if(ConfigHelper.GetBlockCollection(_config, "BlockNumbers").Contains(_message))
+                    {
+                        dialogState.Block = _message;
+                        dialogState.ChatPhase = 2;
+                        result += _messageProvidor.Unit;
+                    }
+                    else
+                    {
+                        result += "Invalid block numbers. Availble blocks are:\n\n" +
+                            ConfigHelper.GetBlocksInCsvFormat(_config, "BlockNumbers");
+                    }
                     break;
 
                 // Unit Phase
@@ -100,6 +111,8 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
                         dialogState.Reset();
                     }
+                    else
+                        result += "Invalid input. Please enter 1 to confirm, or 2 to restart the process";
                     break;
             }
 

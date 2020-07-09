@@ -15,7 +15,7 @@ namespace ThreeI.TelegramBot.Test.Core
         [OneTimeSetUp]
         public void InitialSetup()
         {
-            _config = ConfigHelper.InitConfiguration();
+            _config = TestConfigHelper.InitConfiguration();
         }
 
         [Test]
@@ -23,12 +23,13 @@ namespace ThreeI.TelegramBot.Test.Core
         {
             IMessageProvidor messenger = new BotMessageDialog(_config);
 
-            Assert.That(messenger.Block, Is.EqualTo("MessageBlock dialog"));
-            Assert.That(messenger.Unit, Is.EqualTo("MessageUnit dialog"));
-            Assert.That(messenger.Category, Is.EqualTo("MessageOptions dialog"));
-            Assert.That(messenger.Description, Is.EqualTo("MessageDescription dialog"));
-            Assert.That(messenger.Final, Is.EqualTo("MessageFinal dialog"));
-            Assert.That(messenger.Confirm, Is.EqualTo("MessageConfirm dialog"));
+            Assert.That(messenger.Block, Is.EqualTo("Block dialog"));
+            Assert.That(messenger.Unit, Is.EqualTo("Unit dialog"));
+            Assert.That(messenger.Category, Is.EqualTo("Category dialog"));
+            Assert.That(messenger.Description, Is.EqualTo("Description dialog"));
+            Assert.That(messenger.Final, Is.EqualTo("Final dialog"));
+            Assert.That(messenger.Confirm, Is.EqualTo("Confirm dialog"));
+            Assert.That(messenger.InitialMessage, Is.EqualTo("InitialMessage dialog"));
         }
     }
 }

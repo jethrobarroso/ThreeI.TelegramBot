@@ -18,7 +18,7 @@ namespace ThreeI.TelegramBot.Test.Core
         [OneTimeSetUp]
         public void InitialSetup()
         {
-            _config = ConfigHelper.InitConfiguration();
+            _config = TestConfigHelper.InitConfiguration();
             _token = _config["TelegramToken"];
         }
 
