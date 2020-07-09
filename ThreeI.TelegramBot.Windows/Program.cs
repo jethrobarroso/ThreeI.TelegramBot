@@ -30,7 +30,6 @@ namespace ThreeI.TelegramBot.Windows
             {
                 Log.Information("Starting up the service...");
                 CreateHostBuilder(args).Build().Run();
-
                 return;
             }
             catch (Exception ex)

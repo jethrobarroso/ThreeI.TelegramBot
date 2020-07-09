@@ -15,11 +15,13 @@ namespace ThreeI.TelegramBot.Windows
             _config = config;
         }
 
+        public string InitialMessage => _config["BotMessages:InitialMessage"];
+
         public string Block => _config["BotMessages:Block"];
 
         public string Unit => _config["BotMessages:Unit"];
 
-        public string Option => _config["BotMessages:Option"];
+        public string Category => _config["BotMessages:Category"];
 
         public string Description => _config["BotMessages:Description"];
 
@@ -27,8 +29,8 @@ namespace ThreeI.TelegramBot.Windows
 
         public string Final => _config["BotMessages:Final"];
 
-        public string MessageBadInput => _config["BotMessages:BadInput"];
-
         public string BadInput => _config["BotMessages:BadInput"];
+
+        public string SupportModeNotActive => _config["BotMessages:SupportModeNotActive"];
     }
 }

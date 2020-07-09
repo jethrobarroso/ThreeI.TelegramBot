@@ -64,9 +64,12 @@ namespace ThreeI.TelegramBot.Windows
         {
             if (e.Message.Type == MessageType.Text)
             {
+                var userId = e.Message.From.Id;
+                var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
+                var dialog = nav.ValidateUser(userId.ToString());
+                var result = nav.ProcessValidUser(dialog);
 
-                var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor);
-                Bot.SendTextMessageAsync(e.Message.Chat.Id, $"Your message: {e.Message.Text}");
+                Bot.SendTextMessageAsync(e.Message.Chat.Id, result);
             }
         }
         #endregion
