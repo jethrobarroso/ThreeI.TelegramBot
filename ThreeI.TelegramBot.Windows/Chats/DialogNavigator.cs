@@ -10,17 +10,21 @@ namespace ThreeI.TelegramBot.Windows.Chats
     {
         protected readonly string _message;
         protected readonly IDataRepository _repo;
-        protected readonly Beneficiary _beneficiary;
         protected readonly IMessageProvidor _messageProvidor;
+        protected readonly DialogState _dialogSate;
 
-        public DialogNavigator(string message, IDataRepository repo, Beneficiary beneficiary, IMessageProvidor messageProvidor)
+        public DialogNavigator(string message, IDataRepository repo, IMessageProvidor messageProvidor)
         {
             _message = message;
             _repo = repo;
-            _beneficiary = beneficiary;
             _messageProvidor = messageProvidor;
         }
 
-        public abstract string ProcessMessage();
+        public abstract string ProcessValidUser(string userId);
+
+        public string ValidateUser(string userId)
+        {
+            return null;
+        }
     }
 }

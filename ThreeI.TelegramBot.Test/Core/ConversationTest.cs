@@ -11,7 +11,7 @@ namespace ThreeI.TelegramBot.Test.Core
         [Test]
         public void Reset_DefaultAndEmpty()
         {
-            var state = new ConversationState()
+            var state = new DialogState()
             {
                 Block = "value",
                 Unit = "value",
@@ -23,11 +23,11 @@ namespace ThreeI.TelegramBot.Test.Core
 
             state.Reset();
 
-            Assert.That(state.Block, Is.Empty);
-            Assert.That(state.Unit, Is.Empty);
-            Assert.That(state.Description, Is.Empty);
+            Assert.That(state.Block, Is.Null);
+            Assert.That(state.Unit, Is.Null);
+            Assert.That(state.Description, Is.Null);
             Assert.That(state.Option, Is.Zero);
-            Assert.That(state.Block, Is.Empty);
+            Assert.That(state.Block, Is.Null);
             Assert.That(state.ChatPhase, Is.EqualTo(1));
         }
     }

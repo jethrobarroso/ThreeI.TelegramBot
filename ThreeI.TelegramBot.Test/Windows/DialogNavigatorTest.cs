@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ThreeI.TelegramBot.Test.Windows
 {
-    public class DataServiceTest
+    public class DialogNavigatorTest
     {
         [Test]
-        public void GetBeneficiary_Beneficiary_ValidId()
+        public void ValidateUser(int chatId)
         {
-              
+
         }
     }
 }

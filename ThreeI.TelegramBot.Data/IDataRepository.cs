@@ -5,7 +5,7 @@ namespace ThreeI.TelegramBot.Data
 {
     public interface IDataRepository
     {
-        Beneficiary GetBeneficiary(int beneficiaryId);
-        Beneficiary UpdateBeneficiary(Beneficiary beneficiary);
+        DialogState GetDialogById(string userId);
+        DialogState UpdateDialog(DialogState beneficiary);
     }
 }

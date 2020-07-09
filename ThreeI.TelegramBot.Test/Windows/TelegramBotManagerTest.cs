@@ -1,14 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using ThreeI.TelegramBot.Core;
+using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows;
 
 namespace ThreeI.TelegramBot.Test.Core
 {
-    public class TelegramBotManagerTests
+    public class TelegramBotManagerTest
     {
         private IConfiguration _config;
         private string _token;
@@ -23,13 +25,20 @@ namespace ThreeI.TelegramBot.Test.Core
         [Test]
         public void Init_ArgumentException_BadToken()
         {
-            Assert.Throws<ArgumentException>(() => new TelegramBotManager("Bad Token"));
+            var mockRepo = new Mock<IDataRepository>().Object;
+            var mockMsgProvider = new Mock<IMessageProvidor>().Object;
+            var mockConfig = new Mock<IConfiguration>();
+            mockConfig.Setup(conf => conf["TelegramToken"]).Returns("Bad Token");
+
+            Assert.Throws<ArgumentException>(() => new TelegramBotManager(mockConfig.Object, mockRepo, mockMsgProvider));
         }
 
         [Test]
         public void StartReceiving_TrueFalse_StartStopReceiving()
         {
-            IBotManager bot = new TelegramBotManager(_token);
+            var mockRepo = new Mock<IDataRepository>().Object;
+            var mockMsgProvider = new Mock<IMessageProvidor>().Object;
+            IBotManager bot = new TelegramBotManager(_config, mockRepo, mockMsgProvider);
             bot.StartReceiving();
 
             Assert.That(() =>

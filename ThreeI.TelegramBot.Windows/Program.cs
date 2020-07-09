@@ -10,7 +10,6 @@ using Serilog.Events;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Factory;
-using ThreeI.TelegramBot.Windows.Services;
 
 namespace ThreeI.TelegramBot.Windows
 {
@@ -52,18 +51,12 @@ namespace ThreeI.TelegramBot.Windows
                 .UseWindowsService()
                 .ConfigureServices((hostContext, services) =>
                 {
-                    Configuration = hostContext.Configuration;
                     services.AddHostedService<Worker>();
                     try
                     {
-                        services.AddScoped<IMessageProvidor, BotMessageDialog>();
-                        services.AddScoped<IDataRepository, InMemoryData>();
-                        services.AddScoped<IDataService, DataService>();
-                        services.AddScoped<DialogNavigatorFactory>();
-                        services.AddSingleton<IBotManager, TelegramBotManager>(
-                        param => new TelegramBotManager(Configuration["TelegramToken"]));
-                        
-                        
+                        services.AddSingleton<IMessageProvidor, BotMessageDialog>();
+                        services.AddSingleton<IDataRepository, InMemoryData>();
+                        services.AddSingleton<IBotManager, TelegramBotManager>();
                     }
                     catch (ArgumentException ex)
                     {
@@ -73,6 +66,5 @@ namespace ThreeI.TelegramBot.Windows
                 .UseSerilog();
         }
 
-        public static IConfiguration Configuration { get; private set; }
     }
 }

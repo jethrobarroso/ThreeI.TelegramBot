@@ -8,53 +8,21 @@ namespace ThreeI.TelegramBot.Data
 {
     public class InMemoryData : IDataRepository
     {
-        private List<Beneficiary> _beneficiaries;
+        private List<DialogState> _dialogs;
 
         public InMemoryData()
         {
-            InitializeData();
+            _dialogs = new List<DialogState>();
         }
 
-        public Beneficiary GetBeneficiary(int beneficiaryId)
+        public DialogState GetDialogById(string userId)
         {
-            var result = _beneficiaries.FirstOrDefault(b => b.Id == beneficiaryId);
-            return result;
+            throw new NotImplementedException();
         }
 
-        public Beneficiary UpdateBeneficiary(Beneficiary beneficiary)
+        public DialogState UpdateDialog(DialogState beneficiary)
         {
-            return null;
-        }
-
-        private void InitializeData()
-        {
-            _beneficiaries = new List<Beneficiary>()
-            {
-                new Beneficiary()
-                {
-                    Id = 111,
-                    FirstName = "Jonathan",
-                    LastName = "Joestark",
-                    CellNumber = "0763482937",
-                    Conversation = new ConversationState()
-                    {
-                        Block = "103",
-                        Unit = "9",
-                        Description = "Water leak",
-                        Option = 1,
-                        Confirmation = 1,
-                        ChatPhase = 5
-                    }
-                },
-                new Beneficiary()
-                {
-                    Id = 222,
-                    FirstName = "Giorno",
-                    LastName = "Giovanni",
-                    CellNumber = "0834639999",
-                    Conversation = new ConversationState()
-                }
-            };
+            throw new NotImplementedException();
         }
     }
 }

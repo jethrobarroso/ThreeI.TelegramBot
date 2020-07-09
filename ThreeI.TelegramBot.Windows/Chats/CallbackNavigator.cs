@@ -9,13 +9,13 @@ namespace ThreeI.TelegramBot.Windows.Chats
 {
     public class CallbackNavigator : DialogNavigator
     {
-        public CallbackNavigator(string message, IDataRepository repo, Beneficiary beneficiary, IMessageProvidor messageProvidor) 
-            : base(message, repo, beneficiary, messageProvidor)
+        public CallbackNavigator(string message, IDataRepository repo, IMessageProvidor messageProvidor) 
+            : base(message, repo, messageProvidor)
         {
 
         }
 
-        public override string ProcessMessage()
+        public override string ProcessValidUser(string userId)
         {
             throw new NotImplementedException();
         }
