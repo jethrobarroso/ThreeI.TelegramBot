@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -51,11 +52,14 @@ namespace ThreeI.TelegramBot.Windows
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddDbContextPool<SqliteDbContext>(options => 
+                        options.UseSqlite(hostContext.Configuration.GetConnectionString("TelebotSqlite"))
+                    );
                     try
                     {
-                        services.AddSingleton<IMessageProvidor, BotMessageDialog>();
-                        services.AddSingleton<IDataRepository, InMemoryData>();
-                        services.AddSingleton<IBotManager, TelegramBotManager>();
+                        services.AddScoped<IMessageProvidor, BotMessageDialog>();
+                        services.AddScoped<IDataRepository, InMemoryDataRepository>();
+                        services.AddScoped<IBotManager, TelegramBotManager>();
                     }
                     catch (ArgumentException ex)
                     {

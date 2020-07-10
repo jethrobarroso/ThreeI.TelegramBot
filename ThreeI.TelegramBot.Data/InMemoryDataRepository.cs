@@ -7,11 +7,11 @@ using ThreeI.TelegramBot.Core;
 
 namespace ThreeI.TelegramBot.Data
 {
-    public class InMemoryData : IDataRepository
+    public class InMemoryDataRepository : IDataRepository
     {
         private List<DialogState> _dialogs;
 
-        public InMemoryData()
+        public InMemoryDataRepository()
         {
             _dialogs = new List<DialogState>();
             InitialiseDialogStates();

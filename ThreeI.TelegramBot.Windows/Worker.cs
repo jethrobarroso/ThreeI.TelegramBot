@@ -50,7 +50,7 @@ namespace ThreeI.TelegramBot.Windows
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                    await Task.Delay(10000, stoppingToken);
+                    await Task.Delay(60000, stoppingToken);
                 }
             }    
             catch (Exception ex)
@@ -59,6 +59,7 @@ namespace ThreeI.TelegramBot.Windows
             }
             finally
             {
+                Log.Warning("Bot service shutting down...");
                 Log.CloseAndFlush();
                 _bot.StopReceiving();
             }

@@ -15,7 +15,7 @@ namespace ThreeI.TelegramBot.Test.Core
             {
                 Block = "value",
                 Unit = "value",
-                Id = 1,
+                DialogId = 1,
                 Description = "value",
                 Category = 2,
                 Confirmation = 1
