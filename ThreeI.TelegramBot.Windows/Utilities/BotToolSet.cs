@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Castle.Core.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using ThreeI.TelegramBot.Core;
@@ -10,7 +12,7 @@ namespace ThreeI.TelegramBot.Windows.Utilities
     /// <summary>
     /// Useful tools for processing telegram bot data
     /// </summary>
-    public static class DataToolSet
+    public static class BotToolSet
     {
         /// <summary>
         /// Populates a <FaultReport cref="FaultReport"/> object from a <DialogState cref="DialogState"/> instance.

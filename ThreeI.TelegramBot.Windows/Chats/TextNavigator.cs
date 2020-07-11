@@ -18,7 +18,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
         }
 
-        public override string ProcessValidUser(DialogState dialogState, Message message)
+        public override (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialogState, Message message)
         {
             int categoryValue;
             int confirmOption;
@@ -33,14 +33,15 @@ namespace ThreeI.TelegramBot.Windows.Chats
                 {
                     dialogState.Reset(true);
                     _repo.UpdateDialogState(dialogState);
-                    return $"Your session has been reset.\n\n{_messageProvidor.Block}\n\n" +
-                        $"{ConfigHelper.GetBlockListInText(_config,"BlockNumber")}";
+
+                    return ($"Your session has been reset.\n\n{_messageProvidor.Block}\n\n" +
+                        $"{ConfigHelper.GetBlockListInText(_config, "BlockNumber")}", false);
                 }
                 else
                 {
                     dialogState.Reset(false);
                     _repo.UpdateDialogState(dialogState);
-                    return _messageProvidor.InitialMessage;
+                    return (_messageProvidor.InitialMessage, false);
                 }
             }
 
@@ -48,11 +49,11 @@ namespace ThreeI.TelegramBot.Windows.Chats
             {
                 dialogState.IsSupportMode = true;
                 _repo.UpdateDialogState(dialogState);
-                return _messageProvidor.Block + ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
+                return (_messageProvidor.Block + ConfigHelper.GetBlockListInText(_config, "BlockNumbers"), false);
             }
 
             if (!dialogState.IsSupportMode && _message != "/support")
-                return _messageProvidor.SupportModeNotActive;
+                return (_messageProvidor.SupportModeNotActive, false);
 
             if (timeDiff.TotalMinutes > double.Parse(_config["UserSessionExpireTime"]))
             {
@@ -62,7 +63,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
                     _messageProvidor.InitialMessage;
                 dialogState.Reset(false);
                 _repo.UpdateDialogState(dialogState);
-                return result;
+                return (result, false);
             }
 
             switch (dialogState.ChatPhase)
@@ -119,7 +120,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
                         if (confirmOption == 1)
                         {
                             result = $"{_messageProvidor.Final}\n\n{_messageProvidor.InitialMessage}";
-                            var report = DataToolSet.ExtractReportData(dialogState, message);
+                            var report = BotToolSet.ExtractReportData(dialogState, message);
                             dialogState.FaultReports.Add(report);
                             dialogState.Reset(false);
                         }
@@ -139,7 +140,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
             _repo.UpdateDialogState(dialogState);
 
-            return result;
+            return (result, false);
         }
     }
 }

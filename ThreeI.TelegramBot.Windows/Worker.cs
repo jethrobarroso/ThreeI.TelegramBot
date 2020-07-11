@@ -50,7 +50,7 @@ namespace ThreeI.TelegramBot.Windows
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                    await Task.Delay(60000, stoppingToken);
+                    await Task.Delay(new TimeSpan(1,0,0), stoppingToken);
                 }
             }    
             catch (Exception ex)

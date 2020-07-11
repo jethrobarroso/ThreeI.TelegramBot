@@ -24,7 +24,9 @@ namespace ThreeI.TelegramBot.Windows.Chats
             _config = config;
         }
 
-        public abstract string ProcessValidUser(DialogState dialog, Message message);
+        public string Response { get; private set; }
+
+        public abstract (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialog, Message message);
 
         public virtual DialogState ValidateUser(string userId)
         {

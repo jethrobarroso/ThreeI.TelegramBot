@@ -17,7 +17,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
         }
 
-        public override string ProcessValidUser(DialogState dialogState, Message message)
+        public override (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialogState, Message message)
         {
             throw new NotImplementedException();
         }
