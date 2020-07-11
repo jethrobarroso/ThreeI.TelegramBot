@@ -18,7 +18,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
         }
 
-        public override string ProcessValidUser(DialogState dialogState)
+        public override string ProcessValidUser(DialogState dialogState, Message message)
         {
             int categoryValue;
             int confirmOption;
@@ -119,6 +119,8 @@ namespace ThreeI.TelegramBot.Windows.Chats
                         if (confirmOption == 1)
                         {
                             result = $"{_messageProvidor.Final}\n\n{_messageProvidor.InitialMessage}";
+                            var report = DataToolSet.ExtractReportData(dialogState, message);
+                            dialogState.FaultReports.Add(report);
                             dialogState.Reset(false);
                         }
                         else

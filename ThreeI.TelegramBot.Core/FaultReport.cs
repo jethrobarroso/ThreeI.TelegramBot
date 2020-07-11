@@ -14,7 +14,7 @@ namespace ThreeI.TelegramBot.Core
         public int ReportId { get; set; }
 
         [ForeignKey("dialog_id")]
-        public DialogState DialogState { get; set; }
+        public virtual DialogState DialogState { get; set; }
 
         [Column("first_name")]
         public string FirstName { get; set; }

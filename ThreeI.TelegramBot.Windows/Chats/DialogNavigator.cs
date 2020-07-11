@@ -3,6 +3,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot.Types;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
 
@@ -23,7 +24,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
             _config = config;
         }
 
-        public abstract string ProcessValidUser(DialogState dialog);
+        public abstract string ProcessValidUser(DialogState dialog, Message message);
 
         public virtual DialogState ValidateUser(string userId)
         {

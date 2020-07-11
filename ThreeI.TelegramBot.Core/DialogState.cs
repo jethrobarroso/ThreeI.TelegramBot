@@ -40,7 +40,7 @@ namespace ThreeI.TelegramBot.Core
         [Column("is_support_mode")]
         public bool IsSupportMode { get; set; }
 
-        public List<FaultReport> FaultReports { get; set; }
+        public virtual List<FaultReport> FaultReports { get; set; }
 
         public void Reset(bool withSupport)
         {

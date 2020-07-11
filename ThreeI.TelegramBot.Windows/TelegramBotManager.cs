@@ -68,7 +68,7 @@ namespace ThreeI.TelegramBot.Windows
                 var userId = e.Message.From.Id;
                 var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
                 var dialog = nav.ValidateUser(userId.ToString());
-                var result = nav.ProcessValidUser(dialog);
+                var result = nav.ProcessValidUser(dialog, e.Message);
 
                 Bot.SendTextMessageAsync(e.Message.Chat.Id, result);
             }

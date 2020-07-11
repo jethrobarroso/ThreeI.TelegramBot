@@ -16,7 +16,10 @@ namespace ThreeI.TelegramBot.Data
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<DialogState>()
-        //        .HasAlternateKey(d => d.UserId);
+        //        .HasKey(d => d.DialogId)
+        //        .HasName("PK_dialog_id")
+                
+                
 
         //    modelBuilder.Entity<FaultReport>();
         //}

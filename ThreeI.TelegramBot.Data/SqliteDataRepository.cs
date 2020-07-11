@@ -45,6 +45,7 @@ namespace ThreeI.TelegramBot.Data
             {
                 var db = scope.ServiceProvider.GetRequiredService<SqliteDbContext>();
                 var dialog = db.DialogStates.FirstOrDefault(d => d.UserId == userId);
+                dialog.FaultReports = new List<FaultReport>();
                 return dialog;
             }
         }
