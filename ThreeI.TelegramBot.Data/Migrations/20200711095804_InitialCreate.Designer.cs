@@ -9,7 +9,7 @@ using ThreeI.TelegramBot.Data;
 namespace ThreeI.TelegramBot.Data.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20200709211013_InitialCreate")]
+    [Migration("20200711095804_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,8 +73,32 @@ namespace ThreeI.TelegramBot.Data.Migrations
                         .HasColumnName("report_id")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Block")
+                        .HasColumnName("block")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Category")
+                        .HasColumnName("category")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("DateLogged")
                         .HasColumnName("date_logged")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnName("first_name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnName("last_name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Unit")
+                        .HasColumnName("unit")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("dialog_id")

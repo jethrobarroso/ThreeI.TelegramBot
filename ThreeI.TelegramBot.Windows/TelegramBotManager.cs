@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -17,7 +18,7 @@ namespace ThreeI.TelegramBot.Windows
     public class TelegramBotManager : IBotManager
     {
         private readonly IConfiguration _config;
-        private readonly IDataRepository _repo;
+        private IDataRepository _repo;
         private readonly IMessageProvidor _messageProvidor;
 
         public TelegramBotManager(IConfiguration config, IDataRepository repo, IMessageProvidor messageProvidor)

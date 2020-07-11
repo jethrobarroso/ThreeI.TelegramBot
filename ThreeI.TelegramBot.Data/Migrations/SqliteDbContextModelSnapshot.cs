@@ -71,8 +71,32 @@ namespace ThreeI.TelegramBot.Data.Migrations
                         .HasColumnName("report_id")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Block")
+                        .HasColumnName("block")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Category")
+                        .HasColumnName("category")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("DateLogged")
                         .HasColumnName("date_logged")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnName("first_name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnName("last_name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Unit")
+                        .HasColumnName("unit")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("dialog_id")

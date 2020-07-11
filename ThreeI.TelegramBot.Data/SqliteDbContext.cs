@@ -16,11 +16,9 @@ namespace ThreeI.TelegramBot.Data
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<DialogState>()
-        //        .ToTable("dialog_states")
-        //        .HasKey(d => d.DialogId);
+        //        .HasAlternateKey(d => d.UserId);
 
-        //    modelBuilder.Entity<FaultReport>()
-        //        .ToTable("fault_reports");
+        //    modelBuilder.Entity<FaultReport>();
         //}
     }
 }

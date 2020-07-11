@@ -25,34 +25,51 @@ namespace ThreeI.TelegramBot.Windows.Chats
             var result = string.Empty;
             var timeDiff = DateTime.Now.Subtract(dialogState.LastActive);
 
+            // Reset the dialog if the user enters /start or /reset depending 
+            // depending on the support mode
             if (_message == "/reset" || _message == "/start")
             {
-                dialogState.Reset();
-                return _messageProvidor.InitialMessage;
-            }
-
-            if (!dialogState.IsSupportMode && _message != "/support")
-                return _messageProvidor.SupportModeNotActive;
-              
-            if (timeDiff.TotalMinutes > double.Parse(_config["UserSessionExpireTime"]))
-            {
-                dialogState.LastActive = DateTime.Now;
-                result = "The session has expired due to inactivity. " +
-                    "The support process has reset to phase 1.\n\n";
-                dialogState.Reset();
+                if (dialogState.IsSupportMode)
+                {
+                    dialogState.Reset(true);
+                    _repo.UpdateDialogState(dialogState);
+                    return $"Your session has been reset.\n\n{_messageProvidor.Block}\n\n" +
+                        $"{ConfigHelper.GetBlockListInText(_config,"BlockNumber")}";
+                }
+                else
+                {
+                    dialogState.Reset(false);
+                    _repo.UpdateDialogState(dialogState);
+                    return _messageProvidor.InitialMessage;
+                }
             }
 
             if (!dialogState.IsSupportMode && _message == "/support")
             {
                 dialogState.IsSupportMode = true;
-                return _messageProvidor.Block + ConfigHelper.GetBlocksInCsvFormat(_config, "BlockNumbers");
+                _repo.UpdateDialogState(dialogState);
+                return _messageProvidor.Block + ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
+            }
+
+            if (!dialogState.IsSupportMode && _message != "/support")
+                return _messageProvidor.SupportModeNotActive;
+
+            if (timeDiff.TotalMinutes > double.Parse(_config["UserSessionExpireTime"]))
+            {
+                dialogState.LastActive = DateTime.Now;
+                result = "The session has expired due to inactivity. " +
+                    "The support process has reset to phase 1.\n\n" + 
+                    _messageProvidor.InitialMessage;
+                dialogState.Reset(false);
+                _repo.UpdateDialogState(dialogState);
+                return result;
             }
 
             switch (dialogState.ChatPhase)
             {
                 // Block phase
                 case 1:
-                    if(ConfigHelper.GetBlockCollection(_config, "BlockNumbers").Contains(_message))
+                    if (ConfigHelper.GetBlockCollection(_config, "BlockNumbers").Contains(_message))
                     {
                         dialogState.Block = _message;
                         dialogState.ChatPhase = 2;
@@ -61,7 +78,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
                     else
                     {
                         result += "Invalid block numbers. Availble blocks are:\n\n" +
-                            ConfigHelper.GetBlocksInCsvFormat(_config, "BlockNumbers");
+                            ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
                     }
                     break;
 
@@ -101,15 +118,15 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
                         if (confirmOption == 1)
                         {
-                            result = _messageProvidor.Final;
+                            result = $"{_messageProvidor.Final}\n\n{_messageProvidor.InitialMessage}";
+                            dialogState.Reset(false);
                         }
                         else
                         {
-                            dialogState.Reset();
-                            result += "Your session has been reset.\n\n" + _messageProvidor.Unit;
+                            dialogState.Reset(true);
+                            result += "Your session has been reset.\n\n" + _messageProvidor.Block +
+                                ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
                         }
-
-                        dialogState.Reset();
                     }
                     else
                         result += "Invalid input. Please enter 1 to confirm, or 2 to restart the process";

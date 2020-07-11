@@ -21,7 +21,7 @@ namespace ThreeI.TelegramBot.Test.Core
                 Confirmation = 1
             };
 
-            state.Reset();
+            state.Reset(true);
 
             Assert.That(state.Block, Is.Null);
             Assert.That(state.Unit, Is.Null);

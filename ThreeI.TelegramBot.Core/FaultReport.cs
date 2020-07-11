@@ -16,6 +16,24 @@ namespace ThreeI.TelegramBot.Core
         [ForeignKey("dialog_id")]
         public DialogState DialogState { get; set; }
 
+        [Column("first_name")]
+        public string FirstName { get; set; }
+
+        [Column("last_name")]
+        public string LastName { get; set; }
+
+        [Column("block")]
+        public string Block { get; set; }
+
+        [Column("unit")]
+        public string Unit { get; set; }
+
+        [Column("category")]
+        public int Category { get; set; }
+
+        [Column("description")]
+        public string Description { get; set; }
+
         [Column("date_logged")]
         public DateTime DateLogged { get; set; }
     }

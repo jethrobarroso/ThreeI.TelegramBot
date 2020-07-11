@@ -35,6 +35,12 @@ namespace ThreeI.TelegramBot.Data.Migrations
                     report_id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     dialog_id = table.Column<int>(nullable: true),
+                    first_name = table.Column<string>(nullable: true),
+                    last_name = table.Column<string>(nullable: true),
+                    block = table.Column<string>(nullable: true),
+                    unit = table.Column<string>(nullable: true),
+                    category = table.Column<int>(nullable: false),
+                    description = table.Column<string>(nullable: true),
                     date_logged = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>

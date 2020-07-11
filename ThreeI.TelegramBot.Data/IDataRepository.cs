@@ -8,5 +8,6 @@ namespace ThreeI.TelegramBot.Data
         DialogState GetDialogStateById(string userId);
         DialogState UpdateDialogState(DialogState dialogState);
         DialogState AddDialogState(DialogState dialogState);
+        FaultReport AddReport(FaultReport fault);
     }
 }

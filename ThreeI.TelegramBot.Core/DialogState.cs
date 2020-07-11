@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading;
 
 namespace ThreeI.TelegramBot.Core
 {
@@ -41,7 +42,7 @@ namespace ThreeI.TelegramBot.Core
 
         public List<FaultReport> FaultReports { get; set; }
 
-        public void Reset()
+        public void Reset(bool withSupport)
         {
             Block = null;
             Unit = null;
@@ -50,7 +51,7 @@ namespace ThreeI.TelegramBot.Core
             Confirmation = 0;
             ChatPhase = 1;
             LastActive = DateTime.Now;
-            IsSupportMode = false;
+            IsSupportMode = withSupport;
         }
     }
 }

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\ThreeI.TelegramBot.Core\ThreeI.TelegramBot.Core.csproj" />
     <ProjectReference Include="..\ThreeI.TelegramBot.Data\ThreeI.TelegramBot.Data.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mail\" />
+  </ItemGroup>
 </Project>

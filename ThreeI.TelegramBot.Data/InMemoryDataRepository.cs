@@ -9,11 +9,11 @@ namespace ThreeI.TelegramBot.Data
 {
     public class InMemoryDataRepository : IDataRepository
     {
-        private List<DialogState> _dialogs;
+        private List<DialogState> _dialogs = new List<DialogState>();
+        private List<FaultReport> _reports = new List<FaultReport>();
 
         public InMemoryDataRepository()
         {
-            _dialogs = new List<DialogState>();
             InitialiseDialogStates();
         }
 
@@ -21,6 +21,12 @@ namespace ThreeI.TelegramBot.Data
         {
             _dialogs.Add(dialogState);
             return dialogState;
+        }
+
+        public FaultReport AddReport(FaultReport fault)
+        {
+            _reports.Add(fault);
+            return fault;
         }
 
         public DialogState GetDialogStateById(string userId)
@@ -60,6 +66,8 @@ namespace ThreeI.TelegramBot.Data
             });
 
             _dialogs.Add(new DialogState());
+
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace ThreeI.TelegramBot.Windows.Utilities
             return blocks;
         }
 
-        public static string GetBlocksInCsvFormat(IConfiguration config, string key)
+        public static string GetBlockListInText(IConfiguration config, string key)
         {
             var blocks = GetBlocks(config, key);
             string result = string.Empty;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,35 +10,55 @@ namespace ThreeI.TelegramBot.Data
 {
     public class SqliteDataRepository : IDataRepository
     {
-        private readonly SqliteDbContext _db;
+        private readonly IServiceScopeFactory _scopeFactor;
 
-        public SqliteDataRepository(SqliteDbContext db)
+        public SqliteDataRepository(IServiceScopeFactory scopeFactory)
         {
-            _db = db;
+            _scopeFactor = scopeFactory;
         }
 
         public DialogState AddDialogState(DialogState dialogState)
         {
-            _db.DialogStates.Add(dialogState);
-            _db.SaveChanges();
-
+            using (var scope = _scopeFactor.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<SqliteDbContext>();
+                db.DialogStates.Add(dialogState);
+                db.SaveChanges();
+            }
             return dialogState;
+        }
+
+        public FaultReport AddReport(FaultReport fault)
+        {
+            using (var scope = _scopeFactor.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<SqliteDbContext>();
+                db.FaultReports.Add(fault);
+                db.SaveChanges();
+                return fault;
+            }
         }
 
         public DialogState GetDialogStateById(string userId)
         {
-            var dialog = _db.DialogStates.FirstOrDefault(d => d.UserId == userId);
-            _db.SaveChanges();
-
-            return dialog;
+            using (var scope = _scopeFactor.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<SqliteDbContext>();
+                var dialog = db.DialogStates.FirstOrDefault(d => d.UserId == userId);
+                return dialog;
+            }
         }
 
         public DialogState UpdateDialogState(DialogState dialogState)
         {
-            var entity = _db.DialogStates.Attach(dialogState);
-            entity.State = EntityState.Modified;
-
-            return dialogState;
+            using (var scope = _scopeFactor.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<SqliteDbContext>();
+                var entity = db.DialogStates.Attach(dialogState);
+                entity.State = EntityState.Modified;
+                db.SaveChanges();
+                return dialogState;
+            }
         }
     }
 }
