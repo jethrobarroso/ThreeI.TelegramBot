@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Telegram.Bot.Types;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
@@ -24,13 +22,10 @@ namespace ThreeI.TelegramBot.Windows.Chats
             _config = config;
         }
 
-        public string Response { get; private set; }
-
         public abstract (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialog, Message message);
 
         public virtual DialogState ValidateUser(string userId)
         {
-            var result = string.Empty;
             DialogState dialog;
 
             try
@@ -50,6 +45,33 @@ namespace ThreeI.TelegramBot.Windows.Chats
                 Log.Fatal(ex.Message);
                 throw;
             }
+        }
+
+        public virtual (bool isSupervisor, string reponse) SupervisorCheck(Message message)
+        {
+            var textMessage = message.Text;
+            string categoryText;
+            Supervisor supervisor;
+            string reponse = string.Empty;
+            bool isSupervisor = false;
+
+            if (textMessage.StartsWith("/supervisor "))
+            {
+                categoryText = textMessage.Split(' ')[1];
+                supervisor = _repo.GetSupervisorByCategory(categoryText);
+                if (supervisor != null)
+                {
+                    reponse = $"Supervisor for {categoryText} has been registered.";
+                    supervisor.FullName = $"{message.From.FirstName} {message.From.LastName}";
+                    supervisor.ChatId = message.Chat.Id;
+                    supervisor.TelegramUserId = message.From.Id;
+                    _repo.UpdateSupervisor(supervisor);
+                }
+
+                isSupervisor = true;
+            }
+
+            return (isSupervisor, reponse);
         }
     }
 }

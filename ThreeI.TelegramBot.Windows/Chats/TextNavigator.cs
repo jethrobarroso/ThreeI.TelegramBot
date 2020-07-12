@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Telegram.Bot.Types;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
@@ -20,9 +18,8 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
         public override (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialogState, Message message)
         {
-            int categoryValue;
-            int confirmOption;
-            var result = string.Empty;
+            var response = string.Empty;
+            var supportSubmitted = false;
             var timeDiff = DateTime.Now.Subtract(dialogState.LastActive);
 
             // Reset the dialog if the user enters /start or /reset depending 
@@ -58,12 +55,12 @@ namespace ThreeI.TelegramBot.Windows.Chats
             if (timeDiff.TotalMinutes > double.Parse(_config["UserSessionExpireTime"]))
             {
                 dialogState.LastActive = DateTime.Now;
-                result = "The session has expired due to inactivity. " +
-                    "The support process has reset to phase 1.\n\n" + 
+                response = "The session has expired due to inactivity. " +
+                    "The support process has reset to phase 1.\n\n" +
                     _messageProvidor.InitialMessage;
                 dialogState.Reset(false);
                 _repo.UpdateDialogState(dialogState);
-                return (result, false);
+                return (response, false);
             }
 
             switch (dialogState.ChatPhase)
@@ -74,11 +71,11 @@ namespace ThreeI.TelegramBot.Windows.Chats
                     {
                         dialogState.Block = _message;
                         dialogState.ChatPhase = 2;
-                        result += _messageProvidor.Unit;
+                        response += _messageProvidor.Unit;
                     }
                     else
                     {
-                        result += "Invalid block numbers. Availble blocks are:\n\n" +
+                        response += "Invalid block numbers. Availble blocks are:\n\n" +
                             ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
                     }
                     break;
@@ -87,52 +84,53 @@ namespace ThreeI.TelegramBot.Windows.Chats
                 case 2:
                     dialogState.Unit = _message;
                     dialogState.ChatPhase = 3;
-                    result += _messageProvidor.Category;
+                    response += _messageProvidor.Category;
                     break;
 
                 // Fault category phase
                 case 3:
+                    int categoryValue;
                     if (int.TryParse(_message, out categoryValue)
                         && categoryValue > 0 && categoryValue < 7)
                     {
-                        dialogState.Category = categoryValue;
+                        dialogState.Category = _repo.GetCategoryById(categoryValue);
                         dialogState.ChatPhase = 4;
-                        result += _messageProvidor.Description;
+                        response += _messageProvidor.Description;
                     }
                     else
-                        result = _messageProvidor.BadInput;
+                        response = _messageProvidor.BadInput;
                     break;
 
                 // Description phase
                 case 4:
                     dialogState.Description = _message;
                     dialogState.ChatPhase = 5;
-                    result += _messageProvidor.Confirm;
+                    response += _messageProvidor.Confirm;
                     break;
 
                 // Confirmation phase
                 case 5:
-                    if (int.TryParse(_message, out confirmOption)
+                    if (int.TryParse(_message, out int confirmOption)
                         && confirmOption >= 1 && confirmOption <= 2)
                     {
                         dialogState.Confirmation = confirmOption;
 
                         if (confirmOption == 1)
                         {
-                            result = $"{_messageProvidor.Final}\n\n{_messageProvidor.InitialMessage}";
+                            response = $"{_messageProvidor.Final}\n\n{_messageProvidor.InitialMessage}";
                             var report = BotToolSet.ExtractReportData(dialogState, message);
                             dialogState.FaultReports.Add(report);
-                            dialogState.Reset(false);
+                            supportSubmitted = true;
                         }
                         else
                         {
                             dialogState.Reset(true);
-                            result += "Your session has been reset.\n\n" + _messageProvidor.Block +
+                            response += "Your session has been reset.\n\n" + _messageProvidor.Block +
                                 ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
                         }
                     }
                     else
-                        result += "Invalid input. Please enter 1 to confirm, or 2 to restart the process";
+                        response += "Invalid input. Please enter 1 to confirm, or 2 to restart the process";
                     break;
             }
 
@@ -140,7 +138,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
             _repo.UpdateDialogState(dialogState);
 
-            return (result, false);
+            return (response, supportSubmitted);
         }
     }
 }

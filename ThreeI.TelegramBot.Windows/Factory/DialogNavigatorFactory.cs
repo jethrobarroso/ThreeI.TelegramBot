@@ -1,8 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Chats;
 

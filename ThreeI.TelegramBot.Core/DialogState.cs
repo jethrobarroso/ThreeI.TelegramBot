@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Threading;
 
 namespace ThreeI.TelegramBot.Core
 {
@@ -11,7 +10,7 @@ namespace ThreeI.TelegramBot.Core
     {
         [Key]
         [Column("dialog_id")]
-        public int DialogId { get; set; }
+        public int Id { get; set; }
 
         [Column("user_id")]
         public string UserId { get; set; }
@@ -21,9 +20,6 @@ namespace ThreeI.TelegramBot.Core
 
         [Column("unit")]
         public string Unit { get; set; }
-
-        [Column("category")]
-        public int Category { get; set; }
 
         [Column("description")]
         public string Description { get; set; }
@@ -40,13 +36,14 @@ namespace ThreeI.TelegramBot.Core
         [Column("is_support_mode")]
         public bool IsSupportMode { get; set; }
 
+        [ForeignKey("category_id")]
+        public Category Category { get; set; }
         public virtual List<FaultReport> FaultReports { get; set; }
 
         public void Reset(bool withSupport)
         {
             Block = null;
             Unit = null;
-            Category = 0;
             Description = null;
             Confirmation = 0;
             ChatPhase = 1;

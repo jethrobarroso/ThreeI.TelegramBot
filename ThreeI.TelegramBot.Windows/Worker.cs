@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using ThreeI.TelegramBot.Core;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ThreeI.TelegramBot.Windows
 {
@@ -50,9 +46,9 @@ namespace ThreeI.TelegramBot.Windows
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                    await Task.Delay(new TimeSpan(1,0,0), stoppingToken);
+                    await Task.Delay(new TimeSpan(1, 0, 0), stoppingToken);
                 }
-            }    
+            }
             catch (Exception ex)
             {
                 Log.Fatal(ex.Message);

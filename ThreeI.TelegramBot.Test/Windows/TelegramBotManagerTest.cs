@@ -2,9 +2,6 @@
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows;
 

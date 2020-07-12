@@ -1,16 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using System;
-using System.Diagnostics;
+﻿using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
-using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
-using ThreeI.TelegramBot.Windows.Chats;
 using ThreeI.TelegramBot.Windows.Factory;
 
 namespace ThreeI.TelegramBot.Windows
@@ -18,7 +10,7 @@ namespace ThreeI.TelegramBot.Windows
     public class TelegramBotManager : IBotManager
     {
         private readonly IConfiguration _config;
-        private IDataRepository _repo;
+        private readonly IDataRepository _repo;
         private readonly IMessageProvidor _messageProvidor;
 
         public TelegramBotManager(IConfiguration config, IDataRepository repo, IMessageProvidor messageProvidor)
@@ -67,10 +59,28 @@ namespace ThreeI.TelegramBot.Windows
             {
                 var userId = e.Message.From.Id;
                 var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
-                var dialog = nav.ValidateUser(userId.ToString());
-                var supportState = nav.ProcessMessage(dialog, e.Message);
+                var (isSupervisor, reponse) = nav.SupervisorCheck(e.Message);
 
-                Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse);
+                if (isSupervisor)
+                {
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, reponse);
+                }
+                else
+                {
+                    var dialog = nav.ValidateUser(userId.ToString());
+                    var supportState = nav.ProcessMessage(dialog, e.Message);
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse);
+
+                    if (supportState.supportSubmitted)
+                    {
+                        var message = $"Dear {dialog.Category.Supervisor.FullName}, \n\nA support request has been logged " +
+                            $"by Unit {dialog.Unit} @ block {dialog.Block} with the following description:\n\n" +
+                            $"{dialog.Description}";
+                        Bot.SendTextMessageAsync(dialog.Category.Supervisor.ChatId, message);
+                        dialog.Reset(false);
+                        _repo.UpdateDialogState(dialog);
+                    }
+                }
             }
         }
         #endregion
@@ -83,18 +93,18 @@ namespace ThreeI.TelegramBot.Windows
         {
             Bot.OnMessage += Bot_OnMessage;
         }
-
-        private IReplyMarkup CreateKeyboardMarkup()
-        {
-            var inlineButtons = new InlineKeyboardButton[3][]
-            {
-                new [] { new InlineKeyboardButton() { Text = "Button 1", CallbackData = "test" } },
-                new [] { new InlineKeyboardButton() { Text = "Button 2", CallbackData = "test" } },
-                new [] { new InlineKeyboardButton() { Text = "Button 3", CallbackData = "test" } },
-            };
-
-            return new InlineKeyboardMarkup(inlineButtons);
-        }
         #endregion
+
+        //private IReplyMarkup CreateKeyboardMarkup()
+        //{
+        //    var inlineButtons = new InlineKeyboardButton[3][]
+        //    {
+        //        new [] { new InlineKeyboardButton() { Text = "Button 1", CallbackData = "test" } },
+        //        new [] { new InlineKeyboardButton() { Text = "Button 2", CallbackData = "test" } },
+        //        new [] { new InlineKeyboardButton() { Text = "Button 3", CallbackData = "test" } },
+        //    };
+
+        //    return new InlineKeyboardMarkup(inlineButtons);
+        //}
     }
 }

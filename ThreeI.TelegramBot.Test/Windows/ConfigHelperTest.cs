@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using ThreeI.TelegramBot.Windows.Utilities;
 
 namespace ThreeI.TelegramBot.Test.Windows

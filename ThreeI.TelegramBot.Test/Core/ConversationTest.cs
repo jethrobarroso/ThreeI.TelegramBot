@@ -1,7 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ThreeI.TelegramBot.Core;
 
 namespace ThreeI.TelegramBot.Test.Core
@@ -15,9 +12,9 @@ namespace ThreeI.TelegramBot.Test.Core
             {
                 Block = "value",
                 Unit = "value",
-                DialogId = 1,
+                Id = 1,
                 Description = "value",
-                Category = 2,
+                Category = new Category(),
                 Confirmation = 1
             };
 

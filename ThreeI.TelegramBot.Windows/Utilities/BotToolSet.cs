@@ -1,8 +1,4 @@
-﻿using Castle.Core.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Telegram.Bot;
+﻿using System;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using ThreeI.TelegramBot.Core;

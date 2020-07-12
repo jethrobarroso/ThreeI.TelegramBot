@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ThreeI.TelegramBot.Windows.Utilities
 {
@@ -18,8 +16,8 @@ namespace ThreeI.TelegramBot.Windows.Utilities
         {
             var blocks = GetBlocks(config, key);
             string result = string.Empty;
-            
-            foreach(var block in blocks) 
+
+            foreach (var block in blocks)
                 result += block + Environment.NewLine;
 
             return result;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ThreeI.TelegramBot.Windows
+﻿namespace ThreeI.TelegramBot.Windows
 {
     public interface IMessageProvidor
     {
