@@ -49,13 +49,16 @@ namespace ThreeI.TelegramBot.Windows
                     await Task.Delay(new TimeSpan(1, 0, 0), stoppingToken);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                Log.Warning("Service is shutting down...");
+            }
             catch (Exception ex)
             {
                 Log.Fatal(ex.Message);
             }
             finally
             {
-                Log.Warning("Bot service shutting down...");
                 Log.CloseAndFlush();
                 _bot.StopReceiving();
             }

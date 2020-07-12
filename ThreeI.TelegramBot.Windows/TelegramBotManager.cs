@@ -63,20 +63,20 @@ namespace ThreeI.TelegramBot.Windows
 
                 if (isSupervisor)
                 {
-                    Bot.SendTextMessageAsync(e.Message.Chat.Id, reponse);
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, reponse, ParseMode.Html);
                 }
                 else
                 {
                     var dialog = nav.ValidateUser(userId.ToString());
                     var supportState = nav.ProcessMessage(dialog, e.Message);
-                    Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse);
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse, ParseMode.Html);
 
                     if (supportState.supportSubmitted)
                     {
-                        var message = $"Dear {dialog.Category.Supervisor.FullName}, \n\nA support request has been logged " +
-                            $"by Unit {dialog.Unit} @ block {dialog.Block} with the following description:\n\n" +
-                            $"{dialog.Description}";
-                        Bot.SendTextMessageAsync(dialog.Category.Supervisor.ChatId, message);
+                        var message = $"<b>Dear {dialog.Category.Supervisor.FullName}</b> \n\nA support request has been logged " +
+                            $"by Unit <i>{dialog.Unit}</i> @ block <i>{dialog.Block}</i> with the following description:\n\n" +
+                            $"<pre>{dialog.Description}</pre>";
+                        Bot.SendTextMessageAsync(dialog.Category.Supervisor.ChatId, message, ParseMode.Html);
                         dialog.Reset(false);
                         _repo.UpdateDialogState(dialog);
                     }

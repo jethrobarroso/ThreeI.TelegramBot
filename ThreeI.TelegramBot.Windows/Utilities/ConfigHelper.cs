@@ -17,8 +17,11 @@ namespace ThreeI.TelegramBot.Windows.Utilities
             var blocks = GetBlocks(config, key);
             string result = string.Empty;
 
-            foreach (var block in blocks)
-                result += block + Environment.NewLine;
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                string block = blocks[i];
+                result += (i < blocks.Length-1) ? $"{block}\n" : $"{block}";
+            }
 
             return result;
         }

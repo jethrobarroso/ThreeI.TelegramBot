@@ -16,75 +16,82 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
         }
 
-        public override (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialogState, Message message)
+        public override (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialog, Message message)
         {
             var response = string.Empty;
+            var progressInfo = string.Empty;
             var supportSubmitted = false;
-            var timeDiff = DateTime.Now.Subtract(dialogState.LastActive);
+            var timeDiff = DateTime.Now.Subtract(dialog.LastActive);
 
             // Reset the dialog if the user enters /start or /reset depending 
             // depending on the support mode
             if (_message == "/reset" || _message == "/start")
             {
-                if (dialogState.IsSupportMode)
+                if (dialog.IsSupportMode)
                 {
-                    dialogState.Reset(true);
-                    _repo.UpdateDialogState(dialogState);
+                    dialog.Reset(true);
+                    _repo.UpdateDialogState(dialog);
 
-                    return ($"Your session has been reset.\n\n{_messageProvidor.Block}\n\n" +
-                        $"{ConfigHelper.GetBlockListInText(_config, "BlockNumber")}", false);
+                    return ($"Your session has been reset.\n\n{_messageProvidor.Block}\n" +
+                        ConfigHelper.GetBlockListInText(_config,"BlockNumbers"), false);
                 }
                 else
                 {
-                    dialogState.Reset(false);
-                    _repo.UpdateDialogState(dialogState);
+                    dialog.Reset(false);
+                    _repo.UpdateDialogState(dialog);
                     return (_messageProvidor.InitialMessage, false);
                 }
             }
 
-            if (!dialogState.IsSupportMode && _message == "/support")
+            if (!dialog.IsSupportMode && _message == "/support")
             {
-                dialogState.IsSupportMode = true;
-                _repo.UpdateDialogState(dialogState);
-                return (_messageProvidor.Block + ConfigHelper.GetBlockListInText(_config, "BlockNumbers"), false);
+                dialog.IsSupportMode = true;
+                _repo.UpdateDialogState(dialog);
+                response = BotToolSet.BuildResponseMessage(dialog, _messageProvidor.Block +
+                    Environment.NewLine + ConfigHelper.GetBlockListInText(_config, "BlockNumbers"),
+                    _messageProvidor.SupportFooter);
+                return (response, false);
             }
 
-            if (!dialogState.IsSupportMode && _message != "/support")
+            if (!dialog.IsSupportMode && _message != "/support")
                 return (_messageProvidor.SupportModeNotActive, false);
 
             if (timeDiff.TotalMinutes > double.Parse(_config["UserSessionExpireTime"]))
             {
-                dialogState.LastActive = DateTime.Now;
-                response = "The session has expired due to inactivity. " +
-                    "The support process has reset to phase 1.\n\n" +
+                dialog.LastActive = DateTime.Now;
+                response = "The session has expired due to inactivity.\n\n" +
                     _messageProvidor.InitialMessage;
-                dialogState.Reset(false);
-                _repo.UpdateDialogState(dialogState);
+                dialog.Reset(false);
+                _repo.UpdateDialogState(dialog);
                 return (response, false);
             }
 
-            switch (dialogState.ChatPhase)
+            switch (dialog.ChatPhase)
             {
                 // Block phase
                 case 1:
                     if (ConfigHelper.GetBlockCollection(_config, "BlockNumbers").Contains(_message))
                     {
-                        dialogState.Block = _message;
-                        dialogState.ChatPhase = 2;
-                        response += _messageProvidor.Unit;
+                        dialog.Block = _message;
+                        dialog.ChatPhase = 2;
+                        response = BotToolSet.BuildResponseMessage(dialog,
+                            _messageProvidor.Unit, _messageProvidor.SupportFooter);
                     }
                     else
                     {
-                        response += "Invalid block numbers. Availble blocks are:\n\n" +
+                        var invalidMsg = $"Invalid block number.\n{_messageProvidor.Block}\n" +
                             ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
+
+                        response = BotToolSet.BuildResponseMessage(dialog, invalidMsg, _messageProvidor.SupportFooter);
                     }
                     break;
 
                 // Unit Phase
                 case 2:
-                    dialogState.Unit = _message;
-                    dialogState.ChatPhase = 3;
-                    response += _messageProvidor.Category;
+                    dialog.Unit = _message;
+                    response = BotToolSet.BuildResponseMessage(dialog,
+                        _messageProvidor.Category, _messageProvidor.SupportFooter);
+                    dialog.ChatPhase = 3;
                     break;
 
                 // Fault category phase
@@ -93,19 +100,25 @@ namespace ThreeI.TelegramBot.Windows.Chats
                     if (int.TryParse(_message, out categoryValue)
                         && categoryValue > 0 && categoryValue < 7)
                     {
-                        dialogState.Category = _repo.GetCategoryById(categoryValue);
-                        dialogState.ChatPhase = 4;
-                        response += _messageProvidor.Description;
+                        dialog.Category = _repo.GetCategoryById(categoryValue);
+                        response = BotToolSet.BuildResponseMessage(dialog,
+                            _messageProvidor.Description, _messageProvidor.SupportFooter);
+                        dialog.ChatPhase = 4;
                     }
                     else
-                        response = _messageProvidor.BadInput;
+                    {
+                        var invalidMsg = $"Invalid category.\n{_messageProvidor.Category}";
+                        response = BotToolSet.BuildResponseMessage(dialog,
+                            invalidMsg, _messageProvidor.SupportFooter);
+                    }
                     break;
 
                 // Description phase
                 case 4:
-                    dialogState.Description = _message;
-                    dialogState.ChatPhase = 5;
-                    response += _messageProvidor.Confirm;
+                    dialog.Description = _message;
+                    response = BotToolSet.BuildResponseMessage(dialog,
+                            _messageProvidor.Confirm, _messageProvidor.SupportFooter);
+                    dialog.ChatPhase = 5;
                     break;
 
                 // Confirmation phase
@@ -113,30 +126,30 @@ namespace ThreeI.TelegramBot.Windows.Chats
                     if (int.TryParse(_message, out int confirmOption)
                         && confirmOption >= 1 && confirmOption <= 2)
                     {
-                        dialogState.Confirmation = confirmOption;
+                        dialog.Confirmation = confirmOption;
 
                         if (confirmOption == 1)
                         {
                             response = $"{_messageProvidor.Final}\n\n{_messageProvidor.InitialMessage}";
-                            var report = BotToolSet.ExtractReportData(dialogState, message);
-                            dialogState.FaultReports.Add(report);
+                            var report = BotToolSet.ExtractReportData(dialog, message);
+                            dialog.FaultReports.Add(report);
                             supportSubmitted = true;
                         }
                         else
                         {
-                            dialogState.Reset(true);
+                            dialog.Reset(true);
                             response += "Your session has been reset.\n\n" + _messageProvidor.Block +
                                 ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
                         }
                     }
                     else
-                        response += "Invalid input. Please enter 1 to confirm, or 2 to restart the process";
+                        response += BotToolSet.BuildResponseMessage(dialog, $"Invalid input.\n{_messageProvidor.Confirm}",
+                            _messageProvidor.SupportFooter);
                     break;
             }
 
-            dialogState.LastActive = DateTime.Now;
-
-            _repo.UpdateDialogState(dialogState);
+            dialog.LastActive = DateTime.Now;
+            _repo.UpdateDialogState(dialog);
 
             return (response, supportSubmitted);
         }

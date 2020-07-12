@@ -28,5 +28,7 @@ namespace ThreeI.TelegramBot.Windows
         public string BadInput => _config["BotMessages:BadInput"];
 
         public string SupportModeNotActive => _config["BotMessages:SupportModeNotActive"];
+
+        public string SupportFooter => _config["BotMessages:SupportFooter"];
     }
 }

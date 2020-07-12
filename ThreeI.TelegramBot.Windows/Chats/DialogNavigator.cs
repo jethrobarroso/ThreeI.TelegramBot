@@ -36,6 +36,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
                 {
                     dialog = new DialogState() { UserId = userId };
                     dialog.Reset(false);
+                    dialog.LastActive = DateTime.Now;
                     _repo.AddDialogState(dialog);
                 }
                 return dialog;
