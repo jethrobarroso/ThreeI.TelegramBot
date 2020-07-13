@@ -13,7 +13,7 @@ namespace ThreeI.TelegramBot.Windows
     {
         public static void Main(string[] args)
         {
-            var logFileLocation = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\ThreeITelegramBot\BotLogfile.txt";
+            var logFileLocation = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\ThreeITelegramBot\BotTestDevLogfile.txt";
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()

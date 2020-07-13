@@ -30,6 +30,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
                 if (dialog.IsSupportMode)
                 {
                     dialog.Reset(true);
+                    dialog.LastActive = DateTime.Now;
                     _repo.UpdateDialogState(dialog);
 
                     return ($"Your session has been reset.\n\n{_messageProvidor.Block}\n" +
@@ -38,6 +39,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
                 else
                 {
                     dialog.Reset(false);
+                    dialog.LastActive = DateTime.Now;
                     _repo.UpdateDialogState(dialog);
                     return (_messageProvidor.InitialMessage, false);
                 }
@@ -45,6 +47,7 @@ namespace ThreeI.TelegramBot.Windows.Chats
 
             if (!dialog.IsSupportMode && _message == "/support")
             {
+                dialog.LastActive = DateTime.Now;
                 dialog.IsSupportMode = true;
                 _repo.UpdateDialogState(dialog);
                 response = BotToolSet.BuildResponseMessage(dialog, _messageProvidor.Block +
@@ -54,7 +57,11 @@ namespace ThreeI.TelegramBot.Windows.Chats
             }
 
             if (!dialog.IsSupportMode && _message != "/support")
+            {
+                dialog.LastActive = DateTime.Now;
                 return (_messageProvidor.SupportModeNotActive, false);
+            }
+                
 
             if (timeDiff.TotalMinutes > double.Parse(_config["UserSessionExpireTime"]))
             {

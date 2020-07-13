@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Serilog;
+using System;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
@@ -55,32 +57,39 @@ namespace ThreeI.TelegramBot.Windows
         /// <param name="e">Event arguments containing message details</param>
         private void Bot_OnMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message.Type == MessageType.Text)
+            try
             {
-                var userId = e.Message.From.Id;
-                var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
-                var (isSupervisor, reponse) = nav.SupervisorCheck(e.Message);
-
-                if (isSupervisor)
+                if (e.Message.Type == MessageType.Text)
                 {
-                    Bot.SendTextMessageAsync(e.Message.Chat.Id, reponse, ParseMode.Html);
-                }
-                else
-                {
-                    var dialog = nav.ValidateUser(userId.ToString());
-                    var supportState = nav.ProcessMessage(dialog, e.Message);
-                    Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse, ParseMode.Html);
+                    var userId = e.Message.From.Id;
+                    var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
+                    var (isSupervisor, reponse) = nav.SupervisorCheck(e.Message);
 
-                    if (supportState.supportSubmitted)
+                    if (isSupervisor)
                     {
-                        var message = $"<b>Dear {dialog.Category.Supervisor.FullName}</b> \n\nA support request has been logged " +
-                            $"by Unit <i>{dialog.Unit}</i> @ block <i>{dialog.Block}</i> with the following description:\n\n" +
-                            $"<pre>{dialog.Description}</pre>";
-                        Bot.SendTextMessageAsync(dialog.Category.Supervisor.ChatId, message, ParseMode.Html);
-                        dialog.Reset(false);
-                        _repo.UpdateDialogState(dialog);
+                        Bot.SendTextMessageAsync(e.Message.Chat.Id, reponse, ParseMode.Html);
+                    }
+                    else
+                    {
+                        var dialog = nav.ValidateUser(userId.ToString());
+                        var supportState = nav.ProcessMessage(dialog, e.Message);
+                        Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse, ParseMode.Html);
+
+                        if (supportState.supportSubmitted)
+                        {
+                            var message = $"<b>Dear {dialog.Category.Supervisor.FullName}</b> \n\nA support request has been logged " +
+                                $"by Unit <i>{dialog.Unit}</i> @ block <i>{dialog.Block}</i> with the following description:\n\n" +
+                                $"<pre>{dialog.Description}</pre>";
+                            Bot.SendTextMessageAsync(dialog.Category.Supervisor.ChatId, message, ParseMode.Html);
+                            dialog.Reset(false);
+                            _repo.UpdateDialogState(dialog);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex.Message);
             }
         }
         #endregion

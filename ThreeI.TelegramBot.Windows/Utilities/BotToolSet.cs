@@ -43,12 +43,13 @@ namespace ThreeI.TelegramBot.Windows.Utilities
         /// <returns></returns>
         public static string BuildResponseMessage(DialogState dialog, string mainMessage, string footer)
         {
-                var result = $"{mainMessage}\n\n" + 
+            var result = 
                 $"<u><b>Progress</b></u>\n" +
                 $"<i>Block</i>: {dialog.Block}\n" +
                 $"<i>Unit</i>: {dialog.Unit}\n" +
-                $"<i>Category</i>: {((dialog.ChatPhase == 3) ? dialog.Category.Name : string.Empty )}\n" +
+                $"<i>Category</i>: {((dialog.ChatPhase == 3) ? dialog.Category.Name : string.Empty)}\n" +
                 $"<i>Description</i>: {dialog.Description}\n\n" +
+                $"{mainMessage}\n\n" +
                 $"{footer}";
 
             return result;

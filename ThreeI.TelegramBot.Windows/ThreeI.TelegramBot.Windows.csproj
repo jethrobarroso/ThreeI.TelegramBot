@@ -30,4 +30,10 @@
   <ItemGroup>
     <Folder Include="Mail\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="IMessageProvidor.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
 </Project>
