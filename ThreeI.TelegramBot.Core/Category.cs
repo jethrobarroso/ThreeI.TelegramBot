@@ -12,9 +12,12 @@ namespace ThreeI.TelegramBot.Core
         public int Id { get; set; }
 
         [Column("name")]
-        [Required]
         [StringLength(25)]
         public string Name { get; set; }
+
+        [Column("description")]
+        [StringLength(100)]
+        public string Description { get; set; }
 
         [Column("supervisor_id")]
         public int SupervisorId { get; set; }

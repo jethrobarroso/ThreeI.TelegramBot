@@ -23,8 +23,12 @@ namespace ThreeI.TelegramBot.Data.Migrations
                         .HasColumnName("category_id")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(100);
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnName("name")
                         .HasColumnType("TEXT")
                         .HasMaxLength(25);
@@ -39,6 +43,50 @@ namespace ThreeI.TelegramBot.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Electrical related issues",
+                            Name = "Electricity",
+                            SupervisorId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Water related issues",
+                            Name = "Plumbing",
+                            SupervisorId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Painting related issues",
+                            Name = "Paint",
+                            SupervisorId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Walls & Ceilings related issues",
+                            Name = "Walls & Ceilings",
+                            SupervisorId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Carpentry",
+                            Name = "Carpentry",
+                            SupervisorId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Other",
+                            Name = "Other",
+                            SupervisorId = 6
+                        });
                 });
 
             modelBuilder.Entity("ThreeI.TelegramBot.Core.DialogState", b =>
@@ -155,7 +203,6 @@ namespace ThreeI.TelegramBot.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnName("full_name")
                         .HasColumnType("TEXT")
                         .HasMaxLength(50);
@@ -167,6 +214,44 @@ namespace ThreeI.TelegramBot.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("supervisors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChatId = 0L,
+                            TelegramUserId = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ChatId = 0L,
+                            TelegramUserId = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ChatId = 0L,
+                            TelegramUserId = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ChatId = 0L,
+                            TelegramUserId = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ChatId = 0L,
+                            TelegramUserId = 0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ChatId = 0L,
+                            TelegramUserId = 0
+                        });
                 });
 
             modelBuilder.Entity("ThreeI.TelegramBot.Core.Category", b =>

@@ -11,7 +11,6 @@ namespace ThreeI.TelegramBot.Core
         public int Id { get; set; }
 
         [Column("full_name")]
-        [Required]
         [StringLength(50)]
         public string FullName { get; set; }
 

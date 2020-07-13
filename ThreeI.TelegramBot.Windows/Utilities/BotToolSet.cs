@@ -47,7 +47,7 @@ namespace ThreeI.TelegramBot.Windows.Utilities
                 $"<u><b>Progress</b></u>\n" +
                 $"<i>Block</i>: {dialog.Block}\n" +
                 $"<i>Unit</i>: {dialog.Unit}\n" +
-                $"<i>Category</i>: {((dialog.ChatPhase == 3) ? dialog.Category.Name : string.Empty)}\n" +
+                $"<i>Category</i>: {((dialog.ChatPhase >= 3) ? dialog.Category.Name : string.Empty)}\n" +
                 $"<i>Description</i>: {dialog.Description}\n\n" +
                 $"{mainMessage}\n\n" +
                 $"{footer}";

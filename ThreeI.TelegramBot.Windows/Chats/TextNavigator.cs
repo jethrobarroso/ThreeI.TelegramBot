@@ -33,8 +33,10 @@ namespace ThreeI.TelegramBot.Windows.Chats
                     dialog.LastActive = DateTime.Now;
                     _repo.UpdateDialogState(dialog);
 
-                    return ($"Your session has been reset.\n\n{_messageProvidor.Block}\n" +
-                        ConfigHelper.GetBlockListInText(_config,"BlockNumbers"), false);
+                    var tempMsg = BotToolSet.BuildResponseMessage(dialog, $"Your session has been reset.\n\n{_messageProvidor.Block}\n" +
+                        ConfigHelper.GetBlockListInText(_config, "BlockNumbers"), _messageProvidor.SupportFooter);
+
+                    return (tempMsg, false);
                 }
                 else
                 {
@@ -107,10 +109,10 @@ namespace ThreeI.TelegramBot.Windows.Chats
                     if (int.TryParse(_message, out categoryValue)
                         && categoryValue > 0 && categoryValue < 7)
                     {
+                        dialog.ChatPhase = 4;
                         dialog.Category = _repo.GetCategoryById(categoryValue);
                         response = BotToolSet.BuildResponseMessage(dialog,
                             _messageProvidor.Description, _messageProvidor.SupportFooter);
-                        dialog.ChatPhase = 4;
                     }
                     else
                     {
