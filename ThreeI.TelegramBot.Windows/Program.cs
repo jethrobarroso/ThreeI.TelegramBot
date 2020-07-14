@@ -11,15 +11,18 @@ namespace ThreeI.TelegramBot.Windows
 {
     public class Program
     {
+        static string _localAppdataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        static string _logFileLocation = $@"{_localAppdataPath}\ThreeITelegramBot\BotTestDevLogfile.txt";
+
         public static void Main(string[] args)
         {
-            var logFileLocation = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\ThreeITelegramBot\BotTestDevLogfile.txt";
+            
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .WriteTo.File(logFileLocation)
+                .WriteTo.File(_logFileLocation)
                 .CreateLogger();
 
             try
@@ -42,6 +45,7 @@ namespace ThreeI.TelegramBot.Windows
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
+            Environment.SetEnvironmentVariable("LOCAL_APPDATA", _localAppdataPath);
             return Host.CreateDefaultBuilder(args)
                 .UseWindowsService()
                 .ConfigureServices((hostContext, services) =>

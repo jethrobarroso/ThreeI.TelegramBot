@@ -23,9 +23,12 @@ namespace ThreeI.TelegramBot.Test.Core
             Assert.That(state.Block, Is.Null);
             Assert.That(state.Unit, Is.Null);
             Assert.That(state.Description, Is.Null);
-            Assert.That(state.Category, Is.Zero);
             Assert.That(state.Block, Is.Null);
             Assert.That(state.ChatPhase, Is.EqualTo(1));
+
+            state.Reset(false);
+
+            Assert.That(state.IsSupportMode, Is.False);
         }
     }
 }
