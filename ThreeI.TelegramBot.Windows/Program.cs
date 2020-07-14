@@ -54,7 +54,8 @@ namespace ThreeI.TelegramBot.Windows
                     services.AddDbContextPool<SqliteDbContext>(options =>
                     {
                         //options.UseLazyLoadingProxies();
-                        options.UseSqlite(hostContext.Configuration.GetConnectionString("TelebotSqlite"));
+                        //options.UseSqlite(hostContext.Configuration.GetConnectionString("TelebotSqlite"));
+                        options.UseMySql(hostContext.Configuration.GetConnectionString("TelebotMySQL"));
                     }
 
                     );

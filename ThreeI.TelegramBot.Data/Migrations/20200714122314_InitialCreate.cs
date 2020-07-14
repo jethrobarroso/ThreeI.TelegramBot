@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ThreeI.TelegramBot.Data.Migrations
@@ -12,7 +13,7 @@ namespace ThreeI.TelegramBot.Data.Migrations
                 columns: table => new
                 {
                     supervisor_id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     full_name = table.Column<string>(maxLength: 50, nullable: true),
                     chat_id = table.Column<long>(nullable: false),
                     telegram_user_id = table.Column<int>(nullable: false)
@@ -27,7 +28,7 @@ namespace ThreeI.TelegramBot.Data.Migrations
                 columns: table => new
                 {
                     category_id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     name = table.Column<string>(maxLength: 25, nullable: true),
                     description = table.Column<string>(maxLength: 100, nullable: true),
                     supervisor_id = table.Column<int>(nullable: false)
@@ -48,7 +49,7 @@ namespace ThreeI.TelegramBot.Data.Migrations
                 columns: table => new
                 {
                     dialog_id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     user_id = table.Column<string>(nullable: true),
                     block = table.Column<string>(nullable: true),
                     unit = table.Column<string>(nullable: true),
@@ -75,7 +76,7 @@ namespace ThreeI.TelegramBot.Data.Migrations
                 columns: table => new
                 {
                     report_id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     first_name = table.Column<string>(maxLength: 50, nullable: true),
                     last_name = table.Column<string>(maxLength: 50, nullable: true),
                     block = table.Column<string>(maxLength: 20, nullable: false),
@@ -105,62 +106,28 @@ namespace ThreeI.TelegramBot.Data.Migrations
             migrationBuilder.InsertData(
                 table: "supervisors",
                 columns: new[] { "supervisor_id", "chat_id", "full_name", "telegram_user_id" },
-                values: new object[] { 1, 0L, null, 0 });
-
-            migrationBuilder.InsertData(
-                table: "supervisors",
-                columns: new[] { "supervisor_id", "chat_id", "full_name", "telegram_user_id" },
-                values: new object[] { 2, 0L, null, 0 });
-
-            migrationBuilder.InsertData(
-                table: "supervisors",
-                columns: new[] { "supervisor_id", "chat_id", "full_name", "telegram_user_id" },
-                values: new object[] { 3, 0L, null, 0 });
-
-            migrationBuilder.InsertData(
-                table: "supervisors",
-                columns: new[] { "supervisor_id", "chat_id", "full_name", "telegram_user_id" },
-                values: new object[] { 4, 0L, null, 0 });
-
-            migrationBuilder.InsertData(
-                table: "supervisors",
-                columns: new[] { "supervisor_id", "chat_id", "full_name", "telegram_user_id" },
-                values: new object[] { 5, 0L, null, 0 });
-
-            migrationBuilder.InsertData(
-                table: "supervisors",
-                columns: new[] { "supervisor_id", "chat_id", "full_name", "telegram_user_id" },
-                values: new object[] { 6, 0L, null, 0 });
+                values: new object[,]
+                {
+                    { 1, 0L, null, 0 },
+                    { 2, 0L, null, 0 },
+                    { 3, 0L, null, 0 },
+                    { 4, 0L, null, 0 },
+                    { 5, 0L, null, 0 },
+                    { 6, 0L, null, 0 }
+                });
 
             migrationBuilder.InsertData(
                 table: "categories",
                 columns: new[] { "category_id", "description", "name", "supervisor_id" },
-                values: new object[] { 1, "Electrical related issues", "Electricity", 1 });
-
-            migrationBuilder.InsertData(
-                table: "categories",
-                columns: new[] { "category_id", "description", "name", "supervisor_id" },
-                values: new object[] { 2, "Water related issues", "Plumbing", 2 });
-
-            migrationBuilder.InsertData(
-                table: "categories",
-                columns: new[] { "category_id", "description", "name", "supervisor_id" },
-                values: new object[] { 3, "Painting related issues", "Paint", 3 });
-
-            migrationBuilder.InsertData(
-                table: "categories",
-                columns: new[] { "category_id", "description", "name", "supervisor_id" },
-                values: new object[] { 4, "Walls & Ceilings related issues", "Walls & Ceilings", 4 });
-
-            migrationBuilder.InsertData(
-                table: "categories",
-                columns: new[] { "category_id", "description", "name", "supervisor_id" },
-                values: new object[] { 5, "Carpentry", "Carpentry", 5 });
-
-            migrationBuilder.InsertData(
-                table: "categories",
-                columns: new[] { "category_id", "description", "name", "supervisor_id" },
-                values: new object[] { 6, "Other", "Other", 6 });
+                values: new object[,]
+                {
+                    { 1, "Electrical related issues", "Electricity", 1 },
+                    { 2, "Water related issues", "Plumbing", 2 },
+                    { 3, "Painting related issues", "Paint", 3 },
+                    { 4, "Walls & Ceilings related issues", "Walls & Ceilings", 4 },
+                    { 5, "Carpentry", "Carpentry", 5 },
+                    { 6, "Other", "Other", 6 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_categories_supervisor_id",
