@@ -56,7 +56,7 @@ namespace ThreeI.TelegramBot.Windows
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    if (DateTime.Now.Hour == 16 && DateTime.Now.Minute == 0)
+                    if (DateTime.Now.Hour == 16 && DateTime.Now.Minute == 00)
                     {
                         _report.CreateExcelReport(_repo.GetDailyReports(), _excelPath);
                         _mailer.SendReportMail(_excelPath);

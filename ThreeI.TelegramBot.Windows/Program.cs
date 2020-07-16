@@ -62,11 +62,11 @@ namespace ThreeI.TelegramBot.Windows
                     );
                     try
                     {
+                        services.AddSingleton<IBotManager, TelegramBotManager>();
                         services.AddSingleton<IReport, ReportExcel>();
                         services.AddSingleton<IMailer, ReportSender>();
                         services.AddSingleton<IMessageProvidor, BotMessageDialog>();
                         services.AddSingleton<IDataRepository, MySqlDataRepository>();
-                        services.AddSingleton<IBotManager, TelegramBotManager>();
                     }
                     catch (ArgumentException ex)
                     {

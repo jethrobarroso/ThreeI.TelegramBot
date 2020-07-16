@@ -49,10 +49,13 @@ namespace ThreeI.TelegramBot.Data
         /// </summary>
         public IEnumerable<FaultReport> GetDailyReports()
         {
-            var startTime = DateTime.Now.Subtract(TimeSpan.FromDays(1));
             using var scope = _scopeFactory.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<MySqlDbContext>();
-            var result = db.FaultReports.Where(r => r.DateLogged >= startTime);
+            var startTime = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+            var result = db.FaultReports
+                .Include(f => f.Category)
+                .Where(f => f.DateLogged >= startTime)
+                .ToList();
             return result;
         }
 
