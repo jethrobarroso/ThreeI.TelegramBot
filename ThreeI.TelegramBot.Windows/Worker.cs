@@ -5,6 +5,9 @@ using Serilog;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ThreeI.TelegramBot.Data;
+using ThreeI.TelegramBot.Windows.Mail;
+using ThreeI.TelegramBot.Windows.Reporting;
 
 namespace ThreeI.TelegramBot.Windows
 {
@@ -13,12 +16,20 @@ namespace ThreeI.TelegramBot.Windows
         private readonly ILogger<Worker> _logger;
         private readonly IConfiguration _config;
         private readonly IBotManager _bot;
+        private readonly IMailer _mailer;
+        private readonly IReport _report;
+        private readonly IDataRepository _repo;
+        private readonly string _excelPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp\snag_report.xlsx";
 
-        public Worker(ILogger<Worker> logger, IConfiguration config, IBotManager bot)
+        public Worker(ILogger<Worker> logger, IConfiguration config, IBotManager bot, 
+            IMailer _mailer, IReport report, IDataRepository _repo)
         {
             _logger = logger;
             _config = config;
             _bot = bot;
+            this._mailer = _mailer;
+            _report = report;
+            this._repo = _repo;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -45,8 +56,13 @@ namespace ThreeI.TelegramBot.Windows
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                    await Task.Delay(new TimeSpan(1, 0, 0), stoppingToken);
+                    if (DateTime.Now.Hour == 16 && DateTime.Now.Minute == 0)
+                    {
+                        _report.CreateExcelReport(_repo.GetDailyReports(), _excelPath);
+                        _mailer.SendReportMail(_excelPath);
+                    }
+                        
+                    await Task.Delay(new TimeSpan(0, 1, 0), stoppingToken);
                 }
             }
             catch (OperationCanceledException)

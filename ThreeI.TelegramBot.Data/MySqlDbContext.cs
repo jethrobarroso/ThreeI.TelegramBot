@@ -4,9 +4,9 @@ using ThreeI.TelegramBot.Core;
 
 namespace ThreeI.TelegramBot.Data
 {
-    public class SqliteDbContext : DbContext
+    public class MySqlDbContext : DbContext
     {
-        public SqliteDbContext(DbContextOptions<SqliteDbContext> options) : base(options) { }
+        public MySqlDbContext(DbContextOptions<MySqlDbContext> options) : base(options) { }
 
         public DbSet<DialogState> DialogStates { get; set; }
         public DbSet<FaultReport> FaultReports { get; set; }
@@ -27,6 +27,7 @@ namespace ThreeI.TelegramBot.Data
                 .HasData(PopulateCategories());
         }
 
+        #region Populate Categories and Supervisors
         private IEnumerable<Supervisor> PopulateSupervisors()
         {
             List<Supervisor> list = new List<Supervisor>();
@@ -87,5 +88,6 @@ namespace ThreeI.TelegramBot.Data
 
             return list;
         }
+        #endregion
     }
 }

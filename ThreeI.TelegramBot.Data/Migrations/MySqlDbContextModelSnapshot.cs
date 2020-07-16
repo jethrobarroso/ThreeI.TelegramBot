@@ -7,8 +7,8 @@ using ThreeI.TelegramBot.Data;
 
 namespace ThreeI.TelegramBot.Data.Migrations
 {
-    [DbContext(typeof(SqliteDbContext))]
-    partial class SqliteDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MySqlDbContext))]
+    partial class MySqlDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

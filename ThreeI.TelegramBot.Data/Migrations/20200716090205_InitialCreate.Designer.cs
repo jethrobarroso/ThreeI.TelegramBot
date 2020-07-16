@@ -8,8 +8,8 @@ using ThreeI.TelegramBot.Data;
 
 namespace ThreeI.TelegramBot.Data.Migrations
 {
-    [DbContext(typeof(SqliteDbContext))]
-    [Migration("20200714122314_InitialCreate")]
+    [DbContext(typeof(MySqlDbContext))]
+    [Migration("20200716090205_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

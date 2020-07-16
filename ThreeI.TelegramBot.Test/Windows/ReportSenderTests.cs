@@ -17,7 +17,7 @@ namespace ThreeI.TelegramBot.Test.Windows
             _config = TestConfigHelper.InitConfiguration();
         }
 
-        [Ignore("Actually sends an email")]
+        [Test]
         public void SendReportMail_200()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp\snag_report.xlsx";  

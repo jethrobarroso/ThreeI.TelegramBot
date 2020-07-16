@@ -6,6 +6,8 @@ using Serilog;
 using Serilog.Events;
 using System;
 using ThreeI.TelegramBot.Data;
+using ThreeI.TelegramBot.Windows.Mail;
+using ThreeI.TelegramBot.Windows.Reporting;
 
 namespace ThreeI.TelegramBot.Windows
 {
@@ -51,18 +53,19 @@ namespace ThreeI.TelegramBot.Windows
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
-                    services.AddDbContextPool<SqliteDbContext>(options =>
+                    services.AddDbContextPool<MySqlDbContext>(options =>
                     {
-                        //options.UseLazyLoadingProxies();
-                        //options.UseSqlite(hostContext.Configuration.GetConnectionString("TelebotSqlite"));
                         options.UseMySql(hostContext.Configuration.GetConnectionString("TelebotMySQL"));
+                        //options.UseSqlite(hostContext.Configuration.GetConnectionString("TelebotSqlite"));
                     }
 
                     );
                     try
                     {
+                        services.AddSingleton<IReport, ReportExcel>();
+                        services.AddSingleton<IMailer, ReportSender>();
                         services.AddSingleton<IMessageProvidor, BotMessageDialog>();
-                        services.AddSingleton<IDataRepository, SqliteDataRepository>();
+                        services.AddSingleton<IDataRepository, MySqlDataRepository>();
                         services.AddSingleton<IBotManager, TelegramBotManager>();
                     }
                     catch (ArgumentException ex)
