@@ -11,6 +11,7 @@ namespace ThreeI.TelegramBot.Data
         FaultReport AddReport(FaultReport fault);
         Category GetCategoryById(int categoryValue);
         IEnumerable<Supervisor> GetSupervisors();
+        IEnumerable<FaultReport> GetDailyReports();
         Supervisor GetSupervisorByCategory(string category);
         Supervisor UpdateSupervisor(Supervisor supervisor);
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ThreeI.TelegramBot.Core;
@@ -40,6 +41,18 @@ namespace ThreeI.TelegramBot.Data
             var result = db.Categories
                 .Include(c => c.Supervisor)
                 .FirstOrDefault(c => c.Id == categoryValue);
+            return result;
+        }
+
+        /// <summary>
+        /// Pull FaultReports from the past 24-Hours
+        /// </summary>
+        public IEnumerable<FaultReport> GetDailyReports()
+        {
+            var startTime = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<SqliteDbContext>();
+            var result = db.FaultReports.Where(r => r.DateLogged >= startTime);
             return result;
         }
 

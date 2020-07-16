@@ -29,4 +29,8 @@
     <ProjectReference Include="..\ThreeI.TelegramBot.Windows\ThreeI.TelegramBot.Windows.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
 </Project>

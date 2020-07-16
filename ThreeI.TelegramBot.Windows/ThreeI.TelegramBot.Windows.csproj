@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
+    <PackageReference Include="MailKit" Version="2.8.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -26,10 +28,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ThreeI.TelegramBot.Core\ThreeI.TelegramBot.Core.csproj" />
     <ProjectReference Include="..\ThreeI.TelegramBot.Data\ThreeI.TelegramBot.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mail\" />
   </ItemGroup>
 
   <ItemGroup>
