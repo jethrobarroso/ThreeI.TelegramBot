@@ -20,7 +20,7 @@ namespace ThreeI.TelegramBot.Test.Windows
         [OneTimeSetUp]
         public void InitialSetup()
         {
-            _config = TestConfigHelper.InitConfiguration();
+            _config = TestConfigInitialiser.InitConfiguration();
             InitialiseFaults();
         }
 

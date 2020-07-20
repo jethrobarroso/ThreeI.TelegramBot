@@ -10,7 +10,7 @@ namespace ThreeI.TelegramBot.Test.Windows
         [Test]
         public void ConfigHelper_Collection_ValidConfigArray()
         {
-            IConfiguration config = TestConfigHelper.InitConfiguration();
+            IConfiguration config = TestConfigInitialiser.InitConfiguration();
             var expected = new List<string>() { "1401", "1404" };
             var actual = ConfigHelper.GetBlockCollection(config, "BlockNumbers");
 

@@ -14,15 +14,25 @@ namespace ThreeI.TelegramBot.Test.Windows
         [OneTimeSetUp]
         public void InitialSetup()
         {
-            _config = TestConfigHelper.InitConfiguration();
+            _config = TestConfigInitialiser.InitConfiguration();
         }
 
         [Test]
-        public void SendReportMail_200()
+        public void SendReportMail_200_WithSnags()
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp\snag_report.xlsx";  
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp\snag_report.xlsx";
             IMailer mailer = new ReportSender(_config);
-            mailer.SendReportMail(path);
+            mailer.SendReportMail(path, () => false);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void SendReportMail_200_WithoutSnags()
+        {
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp\snag_report.xlsx";
+            IMailer mailer = new ReportSender(_config);
+            mailer.SendReportMail(path, () => true);
 
             Assert.Pass();
         }

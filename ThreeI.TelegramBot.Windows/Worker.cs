@@ -3,11 +3,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Mail;
 using ThreeI.TelegramBot.Windows.Reporting;
+using Castle.Core.Internal;
 
 namespace ThreeI.TelegramBot.Windows
 {
@@ -59,7 +61,7 @@ namespace ThreeI.TelegramBot.Windows
                     if (DateTime.Now.Hour == 16 && DateTime.Now.Minute == 00)
                     {
                         _report.CreateExcelReport(_repo.GetDailyReports(), _excelPath);
-                        _mailer.SendReportMail(_excelPath);
+                        _mailer.SendReportMail(_excelPath, () => _repo.GetDailyReports().IsNullOrEmpty());
                     }
                         
                     await Task.Delay(new TimeSpan(0, 1, 0), stoppingToken);

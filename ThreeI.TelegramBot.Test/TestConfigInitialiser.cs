@@ -2,7 +2,7 @@
 
 namespace ThreeI.TelegramBot.Test
 {
-    public static class TestConfigHelper
+    public static class TestConfigInitialiser
     {
         public static IConfiguration InitConfiguration()
         {
