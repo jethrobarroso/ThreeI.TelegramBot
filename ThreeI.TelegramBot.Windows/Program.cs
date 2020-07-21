@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,8 @@ using Serilog;
 using Serilog.Events;
 using System;
 using ThreeI.TelegramBot.Data;
+using ThreeI.TelegramBot.Windows.Dialog;
+using ThreeI.TelegramBot.Windows.Factory;
 using ThreeI.TelegramBot.Windows.Mail;
 using ThreeI.TelegramBot.Windows.Reporting;
 
@@ -18,8 +21,6 @@ namespace ThreeI.TelegramBot.Windows
 
         public static void Main(string[] args)
         {
-            
-
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -43,6 +44,7 @@ namespace ThreeI.TelegramBot.Windows
                 Log.Information("Terminating the service...");
                 Log.CloseAndFlush();
             }
+            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -55,13 +57,14 @@ namespace ThreeI.TelegramBot.Windows
                     services.AddHostedService<Worker>();
                     services.AddDbContextPool<MySqlDbContext>(options =>
                     {
-                        options.UseMySql(hostContext.Configuration.GetConnectionString("TelebotMySQL"));
-                        //options.UseSqlite(hostContext.Configuration.GetConnectionString("TelebotSqlite"));
+                        //options.UseMySql(hostContext.Configuration.GetConnectionString("TelebotMySQL"));
+                        options.UseSqlite(hostContext.Configuration.GetConnectionString("TelebotSqlite"));
                     }
 
                     );
                     try
                     {
+                        services.AddSingleton<DialogAggregator>();
                         services.AddSingleton<IBotManager, TelegramBotManager>();
                         services.AddSingleton<IReport, ReportExcel>();
                         services.AddSingleton<IMailer, ReportSender>();
@@ -75,6 +78,5 @@ namespace ThreeI.TelegramBot.Windows
                 })
                 .UseSerilog();
         }
-
     }
 }

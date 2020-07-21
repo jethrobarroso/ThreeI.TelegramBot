@@ -16,7 +16,7 @@ namespace ThreeI.TelegramBot.Test.Windows
         {
             _config = TestConfigInitialiser.InitConfiguration();
         }
-
+ 
         [Test]
         public void SendReportMail_200_WithSnags()
         {

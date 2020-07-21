@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DocumentFormat.OpenXml.Math;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using ThreeI.TelegramBot.Data;
+using ThreeI.TelegramBot.Windows.Dialog;
 using ThreeI.TelegramBot.Windows.Factory;
 
 namespace ThreeI.TelegramBot.Windows
@@ -14,13 +18,14 @@ namespace ThreeI.TelegramBot.Windows
         private readonly IConfiguration _config;
         private readonly IDataRepository _repo;
         private readonly IMessageProvidor _messageProvidor;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public TelegramBotManager(IConfiguration config, IDataRepository repo, IMessageProvidor messageProvidor)
+        public TelegramBotManager(IConfiguration config, IDataRepository repo, IMessageProvidor messageProvidor, IServiceScopeFactory scopeFactory)
         {
             _config = config;
             _repo = repo;
             _messageProvidor = messageProvidor;
-
+            _scopeFactory = scopeFactory;
             ApiToken = _config["TelegramToken"];
             Bot = new TelegramBotClient(ApiToken);
 
@@ -55,6 +60,31 @@ namespace ThreeI.TelegramBot.Windows
         /// </summary>
         /// <param name="sender">Message sender</param>
         /// <param name="e">Event arguments containing message details</param>
+        //private void Bot_OnMessage(object sender, MessageEventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (e.Message.Type == MessageType.Text)
+        //        {
+        //            var userId = e.Message.From.Id;
+        //            var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
+        //            var dialog = nav.ValidateUser(userId.ToString());
+        //            var supportState = nav.ProcessMessage(dialog, e.Message);
+        //            Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse, ParseMode.Html);
+
+        //            if (supportState.supportSubmitted)
+        //            {
+        //                dialog.Reset(false);
+        //                _repo.UpdateDialogState(dialog);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Fatal(ex.Message);
+        //    }
+        //}
+
         private void Bot_OnMessage(object sender, MessageEventArgs e)
         {
             try
@@ -63,28 +93,16 @@ namespace ThreeI.TelegramBot.Windows
                 {
                     var userId = e.Message.From.Id;
                     var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
-                    var (isSupervisor, reponse) = nav.SupervisorCheck(e.Message);
+                    var dialog = nav.ValidateUser(userId.ToString());
 
-                    if (isSupervisor)
-                    {
-                        Bot.SendTextMessageAsync(e.Message.Chat.Id, reponse, ParseMode.Html);
-                    }
-                    else
-                    {
-                        var dialog = nav.ValidateUser(userId.ToString());
-                        var supportState = nav.ProcessMessage(dialog, e.Message);
-                        Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse, ParseMode.Html);
 
-                        if (supportState.supportSubmitted)
-                        {
-                            var message = $"<b>Dear {dialog.Category.Supervisor.FullName}</b> \n\nA support request has been logged " +
-                                $"by Unit <i>{dialog.Unit}</i> @ block <i>{dialog.Block}</i> with the following description:\n\n" +
-                                $"<pre>{dialog.Description}</pre>";
-                            Bot.SendTextMessageAsync(dialog.Category.Supervisor.ChatId, message, ParseMode.Html);
-                            dialog.Reset(false);
-                            _repo.UpdateDialogState(dialog);
-                        }
-                    }
+                    using var scope = _scopeFactory.CreateScope();
+                    var aggregator = scope.ServiceProvider.GetRequiredService<DialogAggregator>();
+                    var processorFactory = new MessageProcessorFactory(_repo, _messageProvidor, _config);
+                    processorFactory.Message = e.Message;
+                    var result = aggregator.GetResult(e.Message.Text, dialog, processorFactory.CreateProcessors());
+
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, result, ParseMode.Html);
                 }
             }
             catch (Exception ex)

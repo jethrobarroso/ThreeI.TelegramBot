@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -25,9 +26,10 @@ namespace ThreeI.TelegramBot.Test.Core
             var mockRepo = new Mock<IDataRepository>().Object;
             var mockMsgProvider = new Mock<IMessageProvidor>().Object;
             var mockConfig = new Mock<IConfiguration>();
+            var mockScope = new Mock<IServiceScopeFactory>().Object;
             mockConfig.Setup(conf => conf["TelegramToken"]).Returns("Bad Token");
 
-            Assert.Throws<ArgumentException>(() => new TelegramBotManager(mockConfig.Object, mockRepo, mockMsgProvider));
+            Assert.Throws<ArgumentException>(() => new TelegramBotManager(mockConfig.Object, mockRepo, mockMsgProvider, mockScope));
         }
 
         [Test]
@@ -35,7 +37,8 @@ namespace ThreeI.TelegramBot.Test.Core
         {
             var mockRepo = new Mock<IDataRepository>().Object;
             var mockMsgProvider = new Mock<IMessageProvidor>().Object;
-            IBotManager bot = new TelegramBotManager(_config, mockRepo, mockMsgProvider);
+            var mockScope = new Mock<IServiceScopeFactory>().Object;
+            IBotManager bot = new TelegramBotManager(_config, mockRepo, mockMsgProvider, mockScope);
             bot.StartReceiving();
 
             Assert.That(() =>

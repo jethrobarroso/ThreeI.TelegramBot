@@ -44,7 +44,7 @@ namespace ThreeI.TelegramBot.Windows.Mail
             message.To.Add(new MailboxAddress(mailConf.ToName, mailConf.To));
             message.Subject = $"Snags Report - {DateTime.Today.ToShortDateString()}";
             var builder = new BodyBuilder();
-            
+
             if (emptyCondition())
             {
                 builder.TextBody = $"Dear {mailConf.ToName},\n\n" +
@@ -60,7 +60,7 @@ namespace ThreeI.TelegramBot.Windows.Mail
                 builder.Attachments.Add(path);
                 message.Body = builder.ToMessageBody();
             }
-            
+
             try
             {
                 using (var client = new SmtpClient())

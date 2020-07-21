@@ -19,7 +19,6 @@ namespace ThreeI.TelegramBot.Windows.Chats
         public override (string reponse, bool supportSubmitted) ProcessMessage(DialogState dialog, Message message)
         {
             var response = string.Empty;
-            var progressInfo = string.Empty;
             var supportSubmitted = false;
             var timeDiff = DateTime.Now.Subtract(dialog.LastActive);
 

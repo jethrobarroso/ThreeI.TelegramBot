@@ -47,32 +47,5 @@ namespace ThreeI.TelegramBot.Windows.Chats
                 throw;
             }
         }
-
-        public virtual (bool isSupervisor, string reponse) SupervisorCheck(Message message)
-        {
-            var textMessage = message.Text;
-            string categoryText;
-            Supervisor supervisor;
-            string reponse = string.Empty;
-            bool isSupervisor = false;
-
-            if (textMessage.StartsWith("/supervisor "))
-            {
-                categoryText = textMessage.Split(' ')[1];
-                supervisor = _repo.GetSupervisorByCategory(categoryText);
-                if (supervisor != null)
-                {
-                    reponse = $"Supervisor for {categoryText} has been registered.";
-                    supervisor.FullName = $"{message.From.FirstName} {message.From.LastName}";
-                    supervisor.ChatId = message.Chat.Id;
-                    supervisor.TelegramUserId = message.From.Id;
-                    _repo.UpdateSupervisor(supervisor);
-                }
-
-                isSupervisor = true;
-            }
-
-            return (isSupervisor, reponse);
-        }
     }
 }
