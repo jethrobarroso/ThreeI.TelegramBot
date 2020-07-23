@@ -13,10 +13,10 @@ namespace ThreeI.TelegramBot.Windows.Utilities
     public static class BotToolSet
     {
         /// <summary>
-        /// Populates a <FaultReport cref="FaultReport"/> object from a <DialogState cref="DialogState"/> instance.
+        /// Populates a <see cref="FaultReport"/> object from a <see cref="DialogState"/> instance.
         /// </summary>
         /// <param name="state">The state of the dialog</param>
-        /// <param name="message">The message object received from the <MessageEventArgs cref="MessageEventArgs"/>s</param>
+        /// <param name="message">The message object received from the <see cref="MessageEventArgs"/>s</param>
         /// <returns></returns>
         public static FaultReport ExtractReportData(DialogState state)
         {
@@ -39,7 +39,7 @@ namespace ThreeI.TelegramBot.Windows.Utilities
         /// <summary>
         /// Generates a commonly used message in the application.
         /// </summary>
-        /// <param name="dialog">The <DialogState cref="FaultReport"/> object that
+        /// <param name="dialog">The <see cref="FaultReport"/> object that
         /// the method will use to extract state information from.</param>
         /// <param name="mainMessage">The main message that will be shown at the top.</param>
         /// <param name="helpMessage">A footer message.</param>
@@ -56,6 +56,22 @@ namespace ThreeI.TelegramBot.Windows.Utilities
                 $"{mainMessage}";
 
             return result;
+        }
+
+        /// <summary>
+        /// Create a ticket message from the <see cref="FaultReport"/> object.
+        /// </summary>
+        /// <param name="report">The fault that was logged</param>
+        /// <returns>A string containing the complete ticket body message.</returns>
+        public static string CreateTicketMessage(FaultReport report)
+        {
+            string message = $"<b>Beneficiary</b>: {report.FirstName} {report.LastName}<br>" +
+                $"<b>Block</b>: {report.Block}<br>" +
+                $"<b>Unit</b>: {report.Unit}<br>" +
+                $"<b>Category</b>: {report.Category.Description}<br>" +
+                $"<b>Description</b>: {report.Description}";
+
+            return message;
         }
 
         public static IReplyMarkup GetBlockMarkup()

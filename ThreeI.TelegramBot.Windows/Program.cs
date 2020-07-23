@@ -66,7 +66,7 @@ namespace ThreeI.TelegramBot.Windows
                     {
                         services.AddSingleton<DialogAggregator>();
                         services.AddSingleton<IBotManager, TelegramBotManager>();
-                        services.AddSingleton<IReport, ReportExcel>();
+                        services.AddSingleton<IReport, ExcelConstructor>();
                         services.AddSingleton<IMailer, ReportSender>();
                         services.AddSingleton<IMessageProvidor, BotMessageDialog>();
                         services.AddSingleton<IDataRepository, MySqlDataRepository>();

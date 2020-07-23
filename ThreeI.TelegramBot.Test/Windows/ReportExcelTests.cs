@@ -27,7 +27,7 @@ namespace ThreeI.TelegramBot.Test.Windows
         [Test]
         public void CreateExcelReport_FileCreated_ValidData()
         {
-            IReport report = new ReportExcel();
+            IReport report = new ExcelConstructor();
             var filePath = report.CreateExcelReport(_faults, _fileLocation);
 
             Assert.That(File.Exists(filePath), Is.True);

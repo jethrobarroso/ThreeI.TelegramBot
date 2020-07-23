@@ -39,6 +39,6 @@ namespace ThreeI.TelegramBot.Core
 
 
         public virtual DialogState DialogState { get; set; }
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
     }
 }

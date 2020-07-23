@@ -29,7 +29,8 @@ namespace ThreeI.TelegramBot.Data
         {
             using var scope = _scopeFactory.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<MySqlDbContext>();
-            db.FaultReports.Add(fault);
+
+            db.Add(fault);
             db.SaveChanges();
             return fault;
         }

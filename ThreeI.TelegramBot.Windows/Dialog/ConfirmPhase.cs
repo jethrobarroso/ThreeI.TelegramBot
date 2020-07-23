@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
+using ThreeI.TelegramBot.Windows.Mail;
 using ThreeI.TelegramBot.Windows.Utilities;
 
 namespace ThreeI.TelegramBot.Windows.Dialog
@@ -16,14 +18,14 @@ namespace ThreeI.TelegramBot.Windows.Dialog
         protected readonly IDataRepository _repo;
         protected readonly IMessageProvidor _messageProvidor;
         protected readonly IConfiguration _config;
-        private readonly Message _message;
+        private readonly IMailer _mailer;
 
-        public ConfirmPhase(IDataRepository repo, IMessageProvidor messageProvidor, IConfiguration config, Message message)
+        public ConfirmPhase(IDataRepository repo, IMessageProvidor messageProvidor, IConfiguration config, IMailer mailer)
         {
             _repo = repo;
             _messageProvidor = messageProvidor;
             _config = config;
-            _message = message;
+            _mailer = mailer;
         }
 
         public bool RequestSubmitted { get; private set; } = false;
@@ -44,8 +46,9 @@ namespace ThreeI.TelegramBot.Windows.Dialog
                     {
                         Response = $"{_messageProvidor.Final}\n\n{_messageProvidor.InitialMessage}";
                         var report = BotToolSet.ExtractReportData(dialog);
-                        _repo.AddReport(report);
+                        dialog.FaultReports.Add(report);
                         RequestSubmitted = true;
+                        Task.Run(() => _mailer.SendLoggedFault(report));
                     }
                     else
                     {

@@ -5,6 +5,7 @@ using System.Text;
 using Telegram.Bot.Types;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Dialog;
+using ThreeI.TelegramBot.Windows.Mail;
 
 namespace ThreeI.TelegramBot.Windows.Factory
 {
@@ -37,7 +38,7 @@ namespace ThreeI.TelegramBot.Windows.Factory
                 new UnitPhase(_repo, _messageProvider, _config),
                 new CategoryPhase(_repo, _messageProvider, _config),
                 new DescriptionPhase(_repo, _messageProvider, _config),
-                new ConfirmPhase(_repo, _messageProvider, _config, Message)
+                new ConfirmPhase(_repo, _messageProvider, _config, new ReportSender(_config))
             };
 
             return list;

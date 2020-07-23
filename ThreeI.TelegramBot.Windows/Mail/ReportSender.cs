@@ -5,14 +5,18 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using MimeKit.Text;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Tls;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
+using ThreeI.TelegramBot.Windows.Utilities;
 
 namespace ThreeI.TelegramBot.Windows.Mail
 {
@@ -28,6 +32,45 @@ namespace ThreeI.TelegramBot.Windows.Mail
         public ReportSender(IConfiguration config)
         {
             _config = config;
+        }
+
+        /// <summary>
+        /// Sends an email to the configured recipient containing 
+        /// extracted <see cref="FaultReport"/> information.
+        /// </summary>
+        /// <param name="fault">The <see cref="FaultReport"/> object that 
+        /// was logged</param>
+        public void SendLoggedFault(FaultReport fault)
+        {
+            var mailConf = _config.GetSection("ReportEmail").Get<EmailConfig>();
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(mailConf.FromName, mailConf.From));
+            message.To.Add(new MailboxAddress(mailConf.ToName, mailConf.To));
+            message.Subject = $"Snags Report - {DateTime.Now}";
+
+            message.Body = new TextPart(TextFormat.Html)
+            {
+                Text = $"Dear {mailConf.ToName},<br><br>" +
+                $"A new ticket has been logged. See below for further details.<br><br>" +
+                BotToolSet.CreateTicketMessage(fault) +
+                $"<br><br>Kind regards<br>Your ThreeI Telegram Bot"
+            };
+
+            try
+            {
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("mail.a-i-solutions.co.za", 465, true);
+                    client.Authenticate("telegrambot@a-i-solutions.co.za", "q0LeWxfTX2zb");
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "Mail send error");
+                throw;
+            }
         }
 
         /// <summary>

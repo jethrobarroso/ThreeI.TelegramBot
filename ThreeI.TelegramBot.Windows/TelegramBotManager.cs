@@ -11,6 +11,8 @@ using Telegram.Bot.Types.ReplyMarkups;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Dialog;
 using ThreeI.TelegramBot.Windows.Factory;
+using ThreeI.TelegramBot.Windows.Mail;
+using ThreeI.TelegramBot.Windows.Reporting;
 
 namespace ThreeI.TelegramBot.Windows
 {

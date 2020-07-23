@@ -14,6 +14,11 @@ namespace ThreeI.TelegramBot.Windows.Reporting
         /// <param name="filePath">Path of file to be stored</param>
         /// <returns>File path of created report</returns>
         string CreateExcelReport(IEnumerable<FaultReport> reports, string filePath);
-        bool TryDeleteExcelReport(string path);
+
+        /// <summary>
+        /// Delete the excel file.
+        /// </summary>
+        /// <returns>Wheter the file was successfully deleted or not.</returns>
+        bool TryDeleteExcelReport();
     }
 }
