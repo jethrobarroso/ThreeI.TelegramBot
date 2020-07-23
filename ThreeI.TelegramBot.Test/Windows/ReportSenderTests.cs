@@ -18,6 +18,7 @@ namespace ThreeI.TelegramBot.Test.Windows
         }
  
         [Test]
+        [Explicit]
         public void SendReportMail_200_WithSnags()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp\snag_report.xlsx";
@@ -28,6 +29,7 @@ namespace ThreeI.TelegramBot.Test.Windows
         }
 
         [Test]
+        [Explicit]
         public void SendReportMail_200_WithoutSnags()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp\snag_report.xlsx";

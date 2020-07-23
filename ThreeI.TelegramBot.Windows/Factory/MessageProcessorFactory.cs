@@ -24,6 +24,8 @@ namespace ThreeI.TelegramBot.Windows.Factory
 
         public Message Message { get; set; }
 
+        public string CallbackData { get; set; }
+
         public IEnumerable<IMessageProcessor> CreateProcessors()
         {
             List<IMessageProcessor> list = new List<IMessageProcessor>()

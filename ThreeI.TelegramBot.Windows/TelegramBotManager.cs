@@ -7,6 +7,7 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Dialog;
 using ThreeI.TelegramBot.Windows.Factory;
@@ -55,55 +56,50 @@ namespace ThreeI.TelegramBot.Windows
         #endregion
 
         #region Callback Methods
-        /// <summary>
-        /// Registers handlers for the bot to handel regular incoming messages
-        /// </summary>
-        /// <param name="sender">Message sender</param>
-        /// <param name="e">Event arguments containing message details</param>
-        //private void Bot_OnMessage(object sender, MessageEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (e.Message.Type == MessageType.Text)
-        //        {
-        //            var userId = e.Message.From.Id;
-        //            var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
-        //            var dialog = nav.ValidateUser(userId.ToString());
-        //            var supportState = nav.ProcessMessage(dialog, e.Message);
-        //            Bot.SendTextMessageAsync(e.Message.Chat.Id, supportState.reponse, ParseMode.Html);
-
-        //            if (supportState.supportSubmitted)
-        //            {
-        //                dialog.Reset(false);
-        //                _repo.UpdateDialogState(dialog);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log.Fatal(ex.Message);
-        //    }
-        //}
-
         private void Bot_OnMessage(object sender, MessageEventArgs e)
         {
             try
             {
                 if (e.Message.Type == MessageType.Text)
                 {
+                    string firstName = e.Message.From.FirstName;
+                    string lastName = e.Message.From.LastName;
                     var userId = e.Message.From.Id;
-                    var nav = DialogNavigatorFactory.CreateNavigator(DialogType.Text, e.Message.Text, _repo, _messageProvidor, _config);
-                    var dialog = nav.ValidateUser(userId.ToString());
-
-
                     using var scope = _scopeFactory.CreateScope();
                     var aggregator = scope.ServiceProvider.GetRequiredService<DialogAggregator>();
                     var processorFactory = new MessageProcessorFactory(_repo, _messageProvidor, _config);
                     processorFactory.Message = e.Message;
+                    var dialog = aggregator.ValidateUserFromMessage(userId.ToString(), e.Message);
                     var result = aggregator.GetResult(e.Message.Text, dialog, processorFactory.CreateProcessors());
 
-                    Bot.SendTextMessageAsync(e.Message.Chat.Id, result, ParseMode.Html);
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, result.Response, ParseMode.Html, replyMarkup: result.KeyboardStyle);
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex.Message);
+            }
+        }
+
+        private void Bot_OnCallbackQuery(object sender, CallbackQueryEventArgs e)
+        {
+            try
+            {
+                string firstName = e.CallbackQuery.From.FirstName;
+                string lastName = e.CallbackQuery.From.LastName;
+                var userId = e.CallbackQuery.From.Id;
+                using var scope = _scopeFactory.CreateScope();
+                var aggregator = scope.ServiceProvider.GetRequiredService<DialogAggregator>();
+                var processorFactory = new MessageProcessorFactory(_repo, _messageProvidor, _config)
+                {
+                    CallbackData = e.CallbackQuery.Data,
+                    Message = e.CallbackQuery.Message
+                };
+                var dialog = aggregator.ValidateUserFromCallback(userId.ToString(), e.CallbackQuery);
+                var result = aggregator.GetResult(e.CallbackQuery.Data, dialog, processorFactory.CreateProcessors());
+
+                Bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id);
+                Bot.SendTextMessageAsync(e.CallbackQuery.From.Id, result.Response, ParseMode.Html, replyMarkup: result.KeyboardStyle);
             }
             catch (Exception ex)
             {
@@ -119,19 +115,9 @@ namespace ThreeI.TelegramBot.Windows
         protected virtual void InitialiseBotHandlers()
         {
             Bot.OnMessage += Bot_OnMessage;
+            Bot.OnCallbackQuery += Bot_OnCallbackQuery;
+            
         }
         #endregion
-
-        //private IReplyMarkup CreateKeyboardMarkup()
-        //{
-        //    var inlineButtons = new InlineKeyboardButton[3][]
-        //    {
-        //        new [] { new InlineKeyboardButton() { Text = "Button 1", CallbackData = "test" } },
-        //        new [] { new InlineKeyboardButton() { Text = "Button 2", CallbackData = "test" } },
-        //        new [] { new InlineKeyboardButton() { Text = "Button 3", CallbackData = "test" } },
-        //    };
-
-        //    return new InlineKeyboardMarkup(inlineButtons);
-        //}
     }
 }

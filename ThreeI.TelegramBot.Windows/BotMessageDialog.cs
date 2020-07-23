@@ -29,6 +29,6 @@ namespace ThreeI.TelegramBot.Windows
 
         public string SupportModeNotActive => _config["BotMessages:SupportModeNotActive"];
 
-        public string SupportFooter => _config["BotMessages:SupportFooter"];
+        public string HelperMessage => _config["BotMessages:HelperMessage"];
     }
 }

@@ -11,6 +11,6 @@
         string Final { get; }
         string BadInput { get; }
         string SupportModeNotActive { get; }
-        string SupportFooter { get; }
+        string HelperMessage { get; }
     }
 }

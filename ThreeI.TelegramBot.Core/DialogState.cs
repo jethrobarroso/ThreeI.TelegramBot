@@ -15,6 +15,14 @@ namespace ThreeI.TelegramBot.Core
         [Column("user_id")]
         public string UserId { get; set; }
 
+        [Column("first_name")]
+        [StringLength(50)]
+        public string FirstName { get; set; }
+
+        [Column("last_name")]
+        [StringLength(50)]
+        public string LastName { get; set; }
+
         [Column("block")]
         public string Block { get; set; }
 

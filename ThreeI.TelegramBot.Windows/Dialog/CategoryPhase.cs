@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Telegram.Bot;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Utilities;
@@ -23,9 +26,8 @@ namespace ThreeI.TelegramBot.Windows.Dialog
         }
 
         public bool RequestSubmitted { get; private set; } = false;
-
         public bool StepHit { get; private set; }
-
+        public IReplyMarkup KeyboardStyle { get; private set; }
         public string Response { get; private set; }
 
         public IMessageProcessor Step(string inputMessage, DialogState dialog)
@@ -39,13 +41,15 @@ namespace ThreeI.TelegramBot.Windows.Dialog
                     dialog.ChatPhase = 4;
                     dialog.Category = _repo.GetCategoryById(categoryValue);
                     Response = BotToolSet.BuildResponseMessage(dialog,
-                        _messageProvidor.Description, _messageProvidor.SupportFooter);
+                        _messageProvidor.Description, _messageProvidor.HelperMessage);
                 }
                 else
                 {
                     var invalidMsg = $"Invalid category.\n{_messageProvidor.Category}";
                     Response = BotToolSet.BuildResponseMessage(dialog,
-                        invalidMsg, _messageProvidor.SupportFooter);
+                        invalidMsg, _messageProvidor.HelperMessage);
+
+                    KeyboardStyle = BotToolSet.GetCategoryMarkup();
                 }
 
                 StepHit = true;

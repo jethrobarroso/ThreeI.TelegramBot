@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 using ThreeI.TelegramBot.Core;
 using ThreeI.TelegramBot.Data;
 using ThreeI.TelegramBot.Windows.Utilities;
@@ -23,6 +26,7 @@ namespace ThreeI.TelegramBot.Windows.Dialog
 
         public bool RequestSubmitted { get; private set; } = false;
         public bool StepHit { get; private set; }
+        public IReplyMarkup KeyboardStyle { get; private set; }
         public string Response { get; private set; }
 
         public IMessageProcessor Step(string inputMessage, DialogState dialog)
@@ -33,8 +37,8 @@ namespace ThreeI.TelegramBot.Windows.Dialog
                 {
                     dialog.Reset(true);
                     dialog.LastActive = DateTime.Now;
-                    Response = BotToolSet.BuildResponseMessage(dialog, $"Your session has been reset.\n\n{_messageProvidor.Block}\n" +
-                        ConfigHelper.GetBlockListInText(_config, "BlockNumbers"), _messageProvidor.SupportFooter);
+                    Response = $"Your session has been reset.\n{_messageProvidor.HelperMessage}\n\n{_messageProvidor.Block}";
+                    KeyboardStyle = BotToolSet.GetBlockMarkup();
                 }
                 else
                 {

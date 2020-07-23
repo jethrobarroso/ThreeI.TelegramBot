@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 using ThreeI.TelegramBot.Core;
 
 namespace ThreeI.TelegramBot.Windows.Dialog
 {
     public interface IMessageProcessor
     {
-        public bool RequestSubmitted { get; }
-        public bool StepHit { get; }
-        public string Response { get; }
+        bool RequestSubmitted { get; }
+        bool StepHit { get; }
+        string Response { get; }
+        IReplyMarkup KeyboardStyle { get; }
         IMessageProcessor Step(string inputMessage, DialogState dialog);
     }
 }

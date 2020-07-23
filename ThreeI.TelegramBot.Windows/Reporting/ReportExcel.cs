@@ -36,5 +36,10 @@ namespace ThreeI.TelegramBot.Windows.Reporting
                 return filePath;
             };
         }
+
+        public void DeleteExcelReport(string path)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
