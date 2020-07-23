@@ -25,11 +25,8 @@ namespace ThreeI.TelegramBot.Windows.Dialog
         }
 
         public bool RequestSubmitted { get; private set; } = false;
-
         public bool StepHit { get; private set; }
-
         public string Response { get; private set; }
-
         public IReplyMarkup KeyboardStyle { get; private set; }
 
         public IMessageProcessor Step(string inputMessage, DialogState dialog)

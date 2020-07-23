@@ -45,9 +45,7 @@ namespace ThreeI.TelegramBot.Windows.Dialog
                 {
                     var invalidMsg = $"Invalid block number.\n{_messageProvidor.Block}\n" +
                         ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
-
                     Response = BotToolSet.BuildResponseMessage(dialog, invalidMsg, _messageProvidor.HelperMessage);
-
                     KeyboardStyle = BotToolSet.GetBlockMarkup();
                 }
 

@@ -53,8 +53,8 @@ namespace ThreeI.TelegramBot.Windows.Dialog
                     else
                     {
                         dialog.Reset(true);
-                        Response = "Your session has been reset.\n\n" + _messageProvidor.Block +
-                            ConfigHelper.GetBlockListInText(_config, "BlockNumbers");
+                        Response = "Your session has been reset.\n\n" + _messageProvidor.Block;
+                        KeyboardStyle = BotToolSet.GetBlockMarkup();
                     }
                 }
                 else
