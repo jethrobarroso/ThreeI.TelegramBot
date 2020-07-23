@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using ThreeI.TelegramBot.Core;
@@ -37,9 +39,22 @@ namespace ThreeI.TelegramBot.Windows.Reporting
             };
         }
 
-        public void DeleteExcelReport(string path)
+        public bool TryDeleteExcelReport(string path)
         {
-            throw new NotImplementedException();
+            bool result;
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                result = true;
+            }    
+            else
+            {
+                Log.Error("Unable to delete temp excel file. File may not exist " +
+                    "or it is open by another application");
+                result = false;
+            }
+
+            return result;
         }
     }
 }

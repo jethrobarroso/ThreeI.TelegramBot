@@ -26,6 +26,7 @@ namespace ThreeI.TelegramBot.Core
 
         [Column("unit")]
         [Required]
+        [StringLength(20)]
         public string Unit { get; set; }
 
         [Column("description")]

@@ -13,6 +13,7 @@ namespace ThreeI.TelegramBot.Core
         public int Id { get; set; }
 
         [Column("user_id")]
+        [StringLength(50)]
         public string UserId { get; set; }
 
         [Column("first_name")]
@@ -24,12 +25,15 @@ namespace ThreeI.TelegramBot.Core
         public string LastName { get; set; }
 
         [Column("block")]
+        [StringLength(20)]
         public string Block { get; set; }
 
         [Column("unit")]
+        [StringLength(20)]
         public string Unit { get; set; }
 
         [Column("description")]
+        [StringLength(10000)]
         public string Description { get; set; }
 
         [Column("confirmation")]
