@@ -57,7 +57,7 @@ namespace ThreeI.TelegramBot.Windows
                     services.AddHostedService<Worker>();
                     services.AddDbContextPool<MySqlDbContext>(options =>
                     {
-                        options.UseMySql(hostContext.Configuration.GetConnectionString("TelebotMySQL"));
+                        options.UseMySql(hostContext.Configuration.GetConnectionString("TelebotMySQL"), options => options.EnableRetryOnFailure());
 
                         // Testdev
                         //options.UseMySql(hostContext.Configuration.GetConnectionString("TestDevSql"));
